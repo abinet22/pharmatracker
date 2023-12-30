@@ -1,0 +1,292 @@
+
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!-- base:css -->
+  <link rel="stylesheet" href="../../../vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="../../../vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../../../css/vertical-layout-light/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../../../images/favicon.png" />
+</head>
+<style>
+
+
+  .cards {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2px;
+    padding: 20px;
+   
+    text-align: center;
+  }
+
+  .cards h2 {
+    color: #333;
+  }
+
+  .cards span {
+    font-size: 8px;
+    color: #007bff;
+    font-weight: bold;
+  }
+
+  .cards i {
+    font-size: 10px;
+    color: #007bff;
+    margin-bottom: 10px;
+  }
+</style>
+<body>
+ 
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <%- include ('./partials/header') %>
+    <!-- partial -->
+  
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_settings-panel.html -->
+      <% if(user.user_roll == "Admin"){%>
+        <%- include ('./partials/sideadmin') %>
+     <% }else if(user.user_roll == "Sales_Manager"){%>
+      <%- include ('./partials/sidesales') %>
+      <% }else if(user.user_roll =="Inventory_Manager"){%>
+        <%- include ('./partials/sideinventory') %>
+        <% }else{%>
+     
+          <% }%>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+
+
+            <div class="col-12 grid-margin stretch-card">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item">Manage Sales</li>
+                  <li class="breadcrumb-item active"><a href="#">All Sales List</a></li>
+                
+                </ol>
+              </nav>
+              </div>
+              <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Total Sale Last 7 Days</h4>
+                    <div class="row">
+                      <% if (salesDataByDate.length > 0) { %>
+                        <% salesDataByDate.forEach(function (row, index) { %>
+                          <div class="cards col-md-3 mb-2" style="<%= index === salesDataByDate.length - 1 ? 'background-color: green;' : '' %>">
+                            <i class="fas fa-calendar"></i>
+                            <h6 style="white-space: nowrap;"><%= row.dayofweek %></h6>
+                           <% const originalDate = new Date(row.fromdate);
+                           const originalDate2 = new Date(row.enddate);
+                           const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+  
+  
+                            const formattedDate1 = originalDate.toLocaleString('en-US', options);
+                            const formattedDate2 = originalDate2.toLocaleString('en-US', options);
+                            %>
+                            <small><%= formattedDate1 %> - <%= formattedDate2 %></small><br>
+                            <% const number = parseFloat(row.sales) %>
+                            <% const formattedNumber = number.toLocaleString('am-ET', { style: 'currency', currency: 'ETB' }); %>
+                            <small style="color: <%= index === salesDataByDate.length - 1 ? '#ffffff' : '#007bff'; %>;"><%= index === salesDataByDate.length - 1 ? 'Today Total Sales: ' : 'Total Sales: ' %></small>  <span style="color: <%= index === salesDataByDate.length - 1 ? '#ffffff' : '#007bff'; %>; font: 2em sans-serif;"><%= formattedNumber %></span>
+                     
+                          </div>
+                        <% }) %>
+                      <% } %>
+                      
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+             
+              <div class="row">
+            
+          
+           
+         
+                <div class="col-md-4 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Total Sale <br>(By Shop)</h4>
+                      <div class="media">
+                         <i class="mdi mdi-shopping icon-md text-info d-flex align-self-start mr-3"></i>
+                        <div class="media-body">
+                          <ul class="list-ticked">
+                           
+                            <% if(todaysalesbyshop.length >0){%>
+                              <% todaysalesbyshop.forEach(function (row){%>
+                            <li>  <%= row.shopname %>  &gt;<span><%= row.quantity %></span></li>
+                             <% }) %>
+                             <%}%>
+                             
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Top 5 Sold Medicine Sale(Quantity)</h4>
+                      <div class="media">
+                         <i class="mdi mdi-shopping icon-md text-info d-flex align-self-start mr-3"></i>
+                        <div class="media-body">
+                          <ul class="list-ticked">
+                           
+                            <% if(todaysalesbyquantity.length >0){%>
+                              <% todaysalesbyquantity.forEach(function (row){%>
+                            <li>  <%= row.medicinename %>  &gt;<span><%= row.quantity %></span></li>
+                             <% }) %>
+                             <%}%>
+                             
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Top 5 Sold Medicine Sale(By Amount)</h4>
+                      <div class="media">
+                         <i class="mdi mdi-shopping icon-md text-info d-flex align-self-start mr-3"></i>
+                        <div class="media-body">
+                          <ul class="list-ticked">
+                           
+                            <% if(todaysalesbyvalue.length >0){%>
+                              <% todaysalesbyvalue.forEach(function (row){%>
+                            <li>  <%= row.medicinename %>  &gt;<span><%= row.quantity %></span></li>
+                             <% }) %>
+                             <%}%>
+                             
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+              <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Filter Report</h4>
+                 
+                    <form action="/sales/searchfiltersalesdata" method="post">
+                      <div class="row">
+                        <div class="col-md-4">
+                            <input type="date" class="form-control" id="startdate" name="startdate" placeholder="Start Date">
+                        
+                           </div>
+                         
+                          <div class="col-md-4">
+                            <input type="date" class="form-control" id="enddate" name="enddate" placeholder="End Date">
+                        
+                           </div>
+                           <!-- <div class="col-md-4 ">
+                            <select class="form-control" id="shopname"   name="shopname" >
+                                <option value="0">Shop Name</option>
+                                </select>
+                        
+                           </div> -->
+                           <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary btn-block mb-2">Submit</button>
+                           </div>
+                      </div>
+                      
+                     
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="">
+                        <table id="myTable" class="table  table-striped table-sm table-responsive " >
+                        <thead>
+                      
+                       
+                        <th>Sold  By</th>
+                        <th>Drug Info</th>
+                        <th>Unit Price X Quantity = Total</th>
+                   
+                        <th>Sale Day</th>
+                        </thead><tbody>
+                          <% if(salelist.length >0){%>
+                            <% salelist.forEach(function(row){%>
+                             <tr>
+                              <td><%= user.fullname %></td>
+                              <td><%= row.medicinename %></td>
+                               <td><%= row.quantity %> X <%= row.unitprice %> = <%= row.totalpayable %></td>
+                               <td><%= new Date(row.createdAt).toLocaleDateString() %></td>
+                             </tr>
+                            
+                            <% })}else{}%>
+                        </tbody>
+                        </table>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+        </div>
+         
+
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+       <%- include ('./partials/footer') %>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- base:js -->
+  <script src="../../../../vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <script src="../../../../vendors/chart.js/Chart.min.js"></script>
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="../../../../js/off-canvas.js"></script>
+  <script src="../../../js/hoverable-collapse.js"></script>
+  <script src="../../../js/template.js"></script>
+  <script src="../../../js/settings.js"></script>
+  <script src="../../../js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="../../../../js/dashboard.js"></script>
+   
+<script>
+  $(document).ready(function() {
+      $('#myTable').DataTable();
+  });
+</script>
+<link href="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.css" rel="stylesheet">
+
+<script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
+  <!-- End custom js for this page-->
+</body>
+
+</html>
+

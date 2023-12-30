@@ -1,0 +1,642 @@
+
+<html lang="en"><head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+    <!-- base:css -->
+    <link rel="stylesheet" href="../../vendors/typicons/typicons.css">
+    <link rel="stylesheet" href="../../vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="../../css/vertical-layout-light/style.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="../../images/favicon.png">
+  <style type="text/css">/* Chart.js */
+  @keyframes chartjs-render-animation{from{opacity:.99}to{opacity:1}}.chartjs-render-monitor{animation:chartjs-render-animation 1ms}.chartjs-size-monitor,.chartjs-size-monitor-expand,.chartjs-size-monitor-shrink{position:absolute;direction:ltr;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1}.chartjs-size-monitor-expand>div{position:absolute;width:1000000px;height:1000000px;left:0;top:0}.chartjs-size-monitor-shrink>div{position:absolute;width:200%;height:200%;left:0;top:0}</style></head>
+  
+  <body>
+    <div class="container-scroller">
+      <!-- partial:../../partials/_navbar.html -->
+      <%- include ('./partials/header') %>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_settings-panel.html -->
+        <%- include ('./partials/sideadmin') %>
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="col-12 grid-margin stretch-card">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item">Statistics</li>
+                  <li class="breadcrumb-item active"><a href="#">Inventory Statistics</a></li>
+                
+                </ol>
+              </nav>
+              </div>
+              <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Filter Statistics</h4>
+                 
+                  
+                      <div class="row">
+                        <div class="col-md-12">
+                           <select class="form-control" id="selectsalestat" onchange="showcharts(this)">
+                            <option>Select Sales Statistics Type</option>
+                            <option value="one">Current Stock:</option>
+                           
+                            <option value="four">Stock By Medicine Category:</option>
+                            <option value="five">Top 10 Out Of Stock Medicine:</option>
+                            <option value="six">Top 10 Over Stock Medicine:</option>
+                          
+                           </select>
+                           </div>
+                         
+                       
+                      </div>
+                      
+                     
+                   
+                  </div>
+                </div>
+              </div>
+              <hr>
+            <div class="row">
+              <div class="col-lg-12 grid-margin stretch-card" id="one" style="display: none;">
+                <div class="card">
+                   
+                  <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <h4 class="card-title">Current Stock: </h4>
+                    <canvas id="barChart" width="728" height="364" style="display: block; width: 364px; height: 182px;" class="chartjs-render-monitor"></canvas>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-12 grid-margin stretch-card" id="two" style="display: none;">
+                <div class="card">
+                  <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <h4 class="card-title">Top Get In Get Out Medicine:</h4>
+                    <canvas id="areaChart" width="728" height="364" style="display: block; width: 364px; height: 182px;" class="chartjs-render-monitor"></canvas>
+                  </div>
+                </div>
+              </div>
+
+              
+            </div>
+            <div class="row">
+               
+                  <div class="col-lg-12 grid-margin stretch-card" id="three" style="display: none;">
+                    <div class="card">
+                      <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                      <h4 class="card-title">Stock by Medicine Name:</h4>
+                        <canvas id="pieChart" width="728" height="364" style="display: block; width: 364px; height: 182px;" class="chartjs-render-monitor"></canvas>
+                      </div>
+                    </div>
+                  </div>
+              <div class="col-lg-12 grid-margin stretch-card" id="four" style="display: none;">
+                <div class="card">
+                  <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                  <h4 class="card-title">Stock by Medicine Category:</h4>
+                    <canvas id="doughnutChart" width="728" height="364" style="display: block; width: 364px; height: 182px;" class="chartjs-render-monitor"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12 grid-margin stretch-card" id="five" style="display: none;">
+                <div class="card">
+                  <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <h4 class="card-title">Top 10 Out Of Stock Medicine:</h4>
+                    <canvas id="doughnutChartOutOfStock" width="728" height="364" style="display: block; width: 364px; height: 182px;" class="chartjs-render-monitor"></canvas>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12 grid-margin stretch-card" id="six" style="display: none;">
+                <div class="card">
+                  <div class="card-body"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <h4 class="card-title">Top 10 Over Stock Medicine:</h4>
+                    <canvas id="doughnutChartOverOfStock" width="728" height="364" style="display: block; width: 364px; height: 182px;" class="chartjs-render-monitor"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+         
+          </div>
+        
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <%- include ('./partials/footer') %>
+          <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- base:js -->
+    <script src="../../vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- inject:js -->
+    <script src="../../js/off-canvas.js"></script>
+    <script src="../../js/hoverable-collapse.js"></script>
+    <script src="../../js/template.js"></script>
+    <script src="../../js/settings.js"></script>
+    <script src="../../js/todolist.js"></script>
+    <!-- endinject -->
+    <!-- plugin js for this page -->
+    <script src="../../vendors/chart.js/Chart.min.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- Custom js for this page-->
+  <script>
+    $(function() {
+  /* ChartJS
+   * -------
+   * Data and config for chartjs
+   */
+  'use strict';
+  var currentinventory = '<%= JSON.stringify(currentinventory) %>';
+  
+  const currentinventoryJSON = currentinventory.replace(/&#34;/g, '"');
+              const currentsotckdata = JSON.parse(currentinventoryJSON);
+  const labelcurrentstock = currentsotckdata.map(item => item.medicinename);
+const datacurrentstock = currentsotckdata.map(item => item.quantity);
+
+var overstock = '<%= JSON.stringify(overstock) %>';
+  
+  const overstockJSON = overstock.replace(/&#34;/g, '"');
+              const overstockdata = JSON.parse(overstockJSON);
+  const labeloverstock = overstockdata.map(item => item.medicinename);
+const dataoverstock = overstockdata.map(item => item.quantity);
+ var  outofstock = '<%= JSON.stringify(outofstock) %>';
+  
+  const outofstockJSON = outofstock.replace(/&#34;/g, '"');
+              const outofstockdata = JSON.parse(outofstockJSON);
+  const labeloutofstock = outofstockdata.map(item => item.medicinename);
+const dataoutofstock = outofstockdata.map(item => item.quantity);
+ var  medicinebycategory = '<%= JSON.stringify(medicinebycategory) %>';
+  
+  const medicinebycategoryJSON = medicinebycategory.replace(/&#34;/g, '"');
+              const medicinebycategorydata = JSON.parse(medicinebycategoryJSON);
+  const labelmedicinebycategory= medicinebycategorydata.map(item => item.medicinecategoryname);
+const datamedicinebycategory= medicinebycategorydata.map(item => item.quantity);
+
+
+  var databar = {
+    labels:labelcurrentstock,
+    datasets: [{
+      label: 'Current Stock',
+      data: datacurrentstock,
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)'
+      ],
+      borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+      ],
+      borderWidth: 1,
+      fill: false
+    }]
+  };
+  var data = {
+    labels: ["2013", "2014", "2014", "2015", "2016", "2017"],
+    datasets: [{
+      label: '# of Sales',
+      data: [10, 19, 3, 5, 2, 3],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)'
+      ],
+      borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+      ],
+      borderWidth: 1,
+      fill: false
+    }]
+  };
+ 
+ 
+ 
+ 
+  var multiLineData = {
+    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+    datasets: [{
+        label: 'Dataset 1',
+        data: [12, 19, 3, 5, 2, 3],
+        borderColor: [
+          '#587ce4'
+        ],
+        borderWidth: 2,
+        fill: false
+      },
+      {
+        label: 'Dataset 2',
+        data: [5, 23, 7, 12, 42, 23],
+        borderColor: [
+          '#ede190'
+        ],
+        borderWidth: 2,
+        fill: false
+      },
+      {
+        label: 'Dataset 3',
+        data: [15, 10, 21, 32, 12, 33],
+        borderColor: [
+          '#f44252'
+        ],
+        borderWidth: 2,
+        fill: false
+      }
+    ]
+  };
+  var options = {
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    },
+    legend: {
+      display: false
+    },
+    elements: {
+      point: {
+        radius: 0
+      }
+    }
+
+  };
+  var doughnutPieDataOut = {
+    datasets: [{
+      data: dataoutofstock,
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.5)',
+        'rgba(54, 162, 235, 0.5)',
+        'rgba(255, 206, 86, 0.5)',
+        'rgba(75, 192, 192, 0.5)',
+        'rgba(153, 102, 255, 0.5)',
+        'rgba(255, 159, 64, 0.5)'
+      ],
+      borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+      ],
+    }],
+
+    // These labels appear in the legend and in the tooltips when hovering different arcs
+    labels:labeloutofstock
+  };
+  var doughnutPieDataOver = {
+    datasets: [{
+      data: dataoverstock,
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.5)',
+        'rgba(54, 162, 235, 0.5)',
+        'rgba(255, 206, 86, 0.5)',
+        'rgba(75, 192, 192, 0.5)',
+        'rgba(153, 102, 255, 0.5)',
+        'rgba(255, 159, 64, 0.5)'
+      ],
+      borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+      ],
+    }],
+
+    // These labels appear in the legend and in the tooltips when hovering different arcs
+    labels:labeloverstock
+  };
+  var doughnutPieData = {
+    datasets: [{
+      data: datamedicinebycategory,
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.5)',
+        'rgba(54, 162, 235, 0.5)',
+        'rgba(255, 206, 86, 0.5)',
+        'rgba(75, 192, 192, 0.5)',
+        'rgba(153, 102, 255, 0.5)',
+        'rgba(255, 159, 64, 0.5)'
+      ],
+      borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+      ],
+    }],
+
+    // These labels appear in the legend and in the tooltips when hovering different arcs
+    labels:labelmedicinebycategory
+  };
+  var doughnutPieOptions = {
+    responsive: true,
+    animation: {
+      animateScale: true,
+      animateRotate: true
+    }
+  };
+  var areaData = {
+    labels: ["2013", "2014", "2015", "2016", "2017"],
+    datasets: [{
+      label: '# Sales Growth Rate:',
+      data: [12, 19, 3, 5, 2, 3],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)'
+      ],
+      borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+      ],
+      borderWidth: 1,
+      fill: true, // 3: no fill
+    }]
+  };
+
+  var areaOptions = {
+    plugins: {
+      filler: {
+        propagate: true
+      }
+    }
+  }
+
+  var multiAreaData = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [{
+        label: 'Facebook',
+        data: [8, 11, 13, 15, 12, 13, 16, 15, 13, 19, 11, 14],
+        borderColor: ['rgba(255, 99, 132, 0.5)'],
+        backgroundColor: ['rgba(255, 99, 132, 0.5)'],
+        borderWidth: 1,
+        fill: true
+      },
+      {
+        label: 'Twitter',
+        data: [7, 17, 12, 16, 14, 18, 16, 12, 15, 11, 13, 9],
+        borderColor: ['rgba(54, 162, 235, 0.5)'],
+        backgroundColor: ['rgba(54, 162, 235, 0.5)'],
+        borderWidth: 1,
+        fill: true
+      },
+      {
+        label: 'Linkedin',
+        data: [6, 14, 16, 20, 12, 18, 15, 12, 17, 19, 15, 11],
+        borderColor: ['rgba(255, 206, 86, 0.5)'],
+        backgroundColor: ['rgba(255, 206, 86, 0.5)'],
+        borderWidth: 1,
+        fill: true
+      }
+    ]
+  };
+
+  var multiAreaOptions = {
+    plugins: {
+      filler: {
+        propagate: true
+      }
+    },
+    elements: {
+      point: {
+        radius: 0
+      }
+    },
+    scales: {
+      xAxes: [{
+        gridLines: {
+          display: false
+        }
+      }],
+      yAxes: [{
+        gridLines: {
+          display: false
+        }
+      }]
+    }
+  }
+
+  var scatterChartData = {
+    datasets: [{
+        label: 'Employee Productivity:Shop1',
+        data: [{
+            x: -10,
+            y: 0
+          },
+          {
+            x: 0,
+            y: 3
+          },
+          {
+            x: -25,
+            y: 5
+          },
+          {
+            x: 40,
+            y: 5
+          }
+        ],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255,99,132,1)'
+        ],
+        borderWidth: 1
+      },
+      {
+        label: 'Employee Productivity:Shop2',
+        data: [{
+            x: 10,
+            y: 5
+          },
+          {
+            x: 20,
+            y: -30
+          },
+          {
+            x: -25,
+            y: 15
+          },
+          {
+            x: -10,
+            y: 5
+          }
+        ],
+        backgroundColor: [
+          'rgba(54, 162, 235, 0.2)',
+        ],
+        borderColor: [
+          'rgba(54, 162, 235, 1)',
+        ],
+        borderWidth: 1
+      }
+    ]
+  }
+
+  var scatterChartOptions = {
+    scales: {
+      xAxes: [{
+        type: 'linear',
+        position: 'bottom'
+      }]
+    }
+  }
+  // Get context with jQuery - using jQuery's .get() method.
+  if ($("#barChart").length) {
+    var barChartCanvas = $("#barChart").get(0).getContext("2d");
+    // This will get the first returned node in the jQuery collection.
+    var barChart = new Chart(barChartCanvas, {
+      type: 'bar',
+      data: databar,
+      options: options
+    });
+  }
+
+  if ($("#lineChart").length) {
+    var lineChartCanvas = $("#lineChart").get(0).getContext("2d");
+    var lineChart = new Chart(lineChartCanvas, {
+      type: 'line',
+      data: data,
+      options: options
+    });
+  }
+
+  if ($("#linechart-multi").length) {
+    var multiLineCanvas = $("#linechart-multi").get(0).getContext("2d");
+    var lineChart = new Chart(multiLineCanvas, {
+      type: 'line',
+      data: multiLineData,
+      options: options
+    });
+  }
+
+  if ($("#areachart-multi").length) {
+    var multiAreaCanvas = $("#areachart-multi").get(0).getContext("2d");
+    var multiAreaChart = new Chart(multiAreaCanvas, {
+      type: 'line',
+      data: multiAreaData,
+      options: multiAreaOptions
+    });
+  }
+  
+  if ($("#doughnutChart").length) {
+    var doughnutChartCanvas = $("#doughnutChart").get(0).getContext("2d");
+    var doughnutChart = new Chart(doughnutChartCanvas, {
+      type: 'doughnut',
+      data: doughnutPieData,
+      options: doughnutPieOptions
+    });
+  }
+  if ($("#doughnutChartOverOfStock").length) {
+    var doughnutChartCanvas = $("#doughnutChartOverOfStock").get(0).getContext("2d");
+    var doughnutChart = new Chart(doughnutChartCanvas, {
+      type: 'doughnut',
+      data: doughnutPieDataOver,
+      options: doughnutPieOptions
+    });
+  }
+  if ($("#doughnutChartOutOfStock").length) {
+    var doughnutChartCanvas = $("#doughnutChartOutOfStock").get(0).getContext("2d");
+    var doughnutChart = new Chart(doughnutChartCanvas, {
+      type: 'doughnut',
+      data: doughnutPieDataOut,
+      options: doughnutPieOptions
+    });
+  }
+  if ($("#pieChart").length) {
+    var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
+    var pieChart = new Chart(pieChartCanvas, {
+      type: 'pie',
+      data: doughnutPieData,
+      options: doughnutPieOptions
+    });
+  }
+
+  if ($("#areaChart").length) {
+    var areaChartCanvas = $("#areaChart").get(0).getContext("2d");
+    var areaChart = new Chart(areaChartCanvas, {
+      type: 'line',
+      data: areaData,
+      options: areaOptions
+    });
+  }
+
+  if ($("#scatterChart").length) {
+    var scatterChartCanvas = $("#scatterChart").get(0).getContext("2d");
+    var scatterChart = new Chart(scatterChartCanvas, {
+      type: 'scatter',
+      data: scatterChartData,
+      options: scatterChartOptions
+    });
+  }
+
+  if ($("#browserTrafficChart").length) {
+    var doughnutChartCanvas = $("#browserTrafficChart").get(0).getContext("2d");
+    var doughnutChart = new Chart(doughnutChartCanvas, {
+      type: 'doughnut',
+      data: browserTrafficData,
+      options: doughnutPieOptions
+    });
+  }
+});
+  </script>
+  
+    <script>
+      
+// Your code to find the chart element goes here
+function showcharts(stattype) {
+        const chartIds = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+        
+        chartIds.forEach((chartId, index) => {
+        
+          const chart = document.getElementById(chartId);
+          if (chartId === stattype.value) {
+      chart.style.display = "block";
+    } else {
+      chart.style.display = "none";
+    }
+        });
+      }
+
+
+    </script>
+  
+  </body></html>

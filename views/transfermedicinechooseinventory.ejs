@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title></title>
+  <!-- base:css -->
+  <link rel="stylesheet" href="../../../vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="../../../vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../../../css/vertical-layout-light/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../../../images/favicon.png" />
+</head>
+<body>
+ 
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <%- include ('./partials/header')%>
+    <!-- partial -->
+  
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_settings-panel.html -->
+   
+  
+      <!-- partial -->
+      <!-- partial:partials/_sidebar.html -->
+    
+      <% if(user.user_roll == "Admin"){%>
+        <%- include ('./partials/sideadmin') %>
+     <% }else if(user.user_roll == "Sales_Manager"){%>
+      <%- include ('./partials/sidesales') %>
+      <% }else if(user.user_roll =="Inventory_Manager"){%>
+        <%- include ('./partials/sideinventory') %>
+        <% }else{%>
+     
+          <% }%>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item " aria-current="page">Add To Inventory</li>
+                    <li class="breadcrumb-item active"><a href="#">Transfer Products</a></li>
+                </ol>
+              </nav>
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+              <%- include ('./partials/messages') %>
+              <div class="card-body">
+                <h4 class="card-title">Transfer Products</h4>
+                <p class="card-description">
+              Transfer Product From One Inventroy To Another
+                </p>
+                <form class="forms-sample" action="/admin/transfertoinventory" method="post">
+                                 
+                  <div class="form-group">
+                    <label for="exampleInputEmail3">From Inventory</label>
+                  <select class="form-control" name="frominventory" id="frominventory"  >
+                    <option value="0">From Inventory Name</option>
+                    <% shoplist.forEach(function (row){%>
+                      
+                            
+                            <option value="<%= row.shopid %>"><%= row.shopname %></option>
+                    <%})%>
+                    <% warehouselist.forEach(function (row){%>
+                      
+                     
+                        <option value="<%= row.invid %>"><%= row.inventoryname %></option>
+                <%})%>
+                  </select>
+                  
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail3">To Inventory</label>
+                  <select class="form-control" name="toinventory" id="toinventory"  >
+                    <option value="0">To Inventory Name</option>
+                    <% shoplist.forEach(function (row){%>
+                      
+                          
+                            <option value="<%= row.shopid %>"><%= row.shopname %></option>
+                    <%})%>
+                    <% warehouselist.forEach(function (row){%>
+                      
+                        <option value="<%= row.invid %>"><%= row.inventoryname %></option>
+                <%})%>
+                  </select>
+                  
+                  </div>
+                     <div class="col-md-6 offset-md-3">
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <script>
+            function openfilterbar(rt){
+
+             var filter = rt.value;
+             var ioh = document.getElementById('ioh');
+             var ls = document.getElementById('ls');
+           
+             if(filter ==="IS"){
+               ioh.style.display  = "block";
+               ls.style.display = "none";
+           
+             }else if(filter ==="SS"){
+               ls.style.display = "block";
+               ioh.style.display  = "none";
+             
+             }
+           
+             else{
+              ls.style.display = "none";
+               ioh.style.display  = "none";
+               
+             }
+            }
+          </script>
+
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        <%- include ('./partials/footer')%>
+        <!-- partial -->
+      
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- base:js -->
+  <script src="../../../vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <script src="../../../vendors/chart.js/Chart.min.js"></script>
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="../../../js/off-canvas.js"></script>
+  <script src="../../../js/hoverable-collapse.js"></script>
+  <script src="../../../js/template.js"></script>
+  <script src="../../../js/settings.js"></script>
+  <script src="../../../js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="../../../js/dashboard.js"></script>
+  <!-- End custom js for this page-->
+</body>
+
+</html>
+

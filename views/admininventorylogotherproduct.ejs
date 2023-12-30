@@ -1,0 +1,194 @@
+
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!-- base:css -->
+  <link rel="stylesheet" href="../../../vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="../../../vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../../../css/vertical-layout-light/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../../../images/favicon.png" />
+</head>
+<body>
+ 
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <%- include ('./partials/header') %>
+    <!-- partial -->
+  
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_settings-panel.html -->
+      <% if(user.user_roll == "Admin"){%>
+        <%- include ('./partials/sideadmin') %>
+     <% }else if(user.user_roll == "Sales_Manager"){%>
+      <%- include ('./partials/sidesales') %>
+      <% }else if(user.user_roll =="Inventory_Manager"){%>
+        <%- include ('./partials/sideinventory') %>
+        <% }else{%>
+     
+          <% }%>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+
+
+            <div class="col-12 grid-margin stretch-card">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item">Manage Inventory</li>
+                  <li class="breadcrumb-item active"><a href="#">Other Product Inventory Log</a></li>
+                
+                </ol>
+              </nav>
+              </div>
+              <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Filter Report</h4>
+                 
+                    <form action="/admin/searchfilterotherproductinvdata" method="post">
+                      <div class="row">
+                        <div class="col-md-4">
+                            <input type="date" class="form-control" id="startdate" name="startdate" placeholder="Start Date">
+                        
+                           </div>
+                         
+                          <div class="col-md-4">
+                            <input type="date" class="form-control" id="enddate" name="enddate" placeholder="End Date">
+                        
+                           </div>
+                           <!-- <div class="col-md-4 ">
+                            <select class="form-control" id="shopname"   name="shopname" >
+                                <option value="0">Shop Name</option>
+                                </select>
+                        
+                           </div> -->
+                           <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary btn-block mb-2">Submit</button>
+                           </div>
+                      </div>
+                      
+                     
+                    </form>
+                  </div>
+                </div>
+              </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="saledata">
+                    <table class="table table-striped jambo_table table-responsive" id="myTable">
+                      <thead>
+                    
+                      <th>#</th>
+                      <th>Inventory Name</th>
+                      <th>Product Info</th>
+                      <th>Product Code</th>
+                   
+                      <th>Expiry Date</th>
+                     
+                      <th>Amount </th>
+                      <th>Stored Date</th>
+                      </thead><tbody>
+                        <% if(inventory.length >0){%>
+                          <% var i=0 %>
+                          <% inventory.forEach(function(row){%>
+                               <% i++ %>
+                           <tr>
+                              <td><%= i %></td>
+                              <td>
+                                    <%= row.location_name %>
+                               
+                              </td>
+                            <td><%= row.medicinename %></td>
+                            <td><%= row.productcode %></td>
+                           
+                             <td>
+                              <%
+                              var date2 = new Date(row.expirydate);
+                              var date1 = new Date();
+                              var monthsLeft = Math.floor((date2 - date1) / (1000 * 60 * 60 * 24 * 30.44)); 
+                              var badgeClass = "";
+                              
+                              if (monthsLeft < 4) {
+                                badgeClass = "badge-danger"; 
+                              } else if (monthsLeft >= 4 && monthsLeft <= 6) {
+                                badgeClass = "badge-warning";
+                              } else {
+                                badgeClass = "badge-success"; 
+                              }
+                              %>
+                                 <span class="badge <%= badgeClass %>"><%= new Date(row.expirydate).toLocaleDateString() %></span>
+                          </td>
+                            
+                             <td><%= row.quantity %></td>
+                             <td><%= new Date(row.createdAt).toLocaleDateString() %></td>
+                           </tr>
+                          
+                          <% })}else{}%>
+                      </tbody>
+                      </table>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+         
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+           
+         
+  
+    
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+       <%- include ('./partials/footer') %>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- base:js -->
+  <script src="../../../../vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <script src="../../../../vendors/chart.js/Chart.min.js"></script>
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="../../../../js/off-canvas.js"></script>
+  <script src="../../../js/hoverable-collapse.js"></script>
+  <script src="../../../js/template.js"></script>
+  <script src="../../../js/settings.js"></script>
+  <script src="../../../js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="../../../../js/dashboard.js"></script>
+  <!-- End custom js for this page-->
+  <script>
+    $(document).ready(function() {
+        $('#myTable').DataTable();
+    });
+</script>
+<link href="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.css" rel="stylesheet">
+
+<script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
+</body>
+
+</html>
+

@@ -1,0 +1,203 @@
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title></title>
+  <!-- base:css -->
+  <link rel="stylesheet" href="../../vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="../../vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../../css/vertical-layout-light/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../../images/favicon.png" />
+  
+</head>
+<body>
+ 
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <%- include ('./partials/header')%>
+    <!-- partial -->
+  
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_settings-panel.html -->
+   
+  
+      <!-- partial -->
+      <!-- partial:partials/_sidebar.html -->
+    
+      <% if(user.user_roll == "Admin"){%>
+        <%- include ('./partials/sideadmin') %>
+     <% }else if(user.user_roll == "Sales_Manager"){%>
+      <%- include ('./partials/sidesales') %>
+      <% }else if(user.user_roll =="Inventory_Manager"){%>
+        <%- include ('./partials/sideinventory') %>
+        <% }else{%>
+     
+          <% }%>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item " aria-current="page">Manage Medicine</li>
+              <li class="breadcrumb-item active"><a href="#">Add Medicine Supplier</a></li>
+          
+            </ol>
+          </nav>
+          <div class="row">
+            <div class="col-md-12">
+           
+              <div class="card">
+                <div class="card-body">
+                  <%- include ('./partials/messages') %>
+                  <ul class="nav nav-tabs justify-content-end bar_tabs" id="myTab" role="tablist">
+										<li class="nav-item">
+										  <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home1" role="tab" aria-controls="home" aria-selected="true">Add Medicine Supplier</a>
+										</li>
+										
+										
+										<li class="nav-item">
+											<a class="nav-link" id="contact2-tab" data-toggle="tab" href="#contact2" role="tab" aria-controls="contact2" aria-selected="false">Medicine Supplier List</a>
+										  </li>
+									  </ul>
+									  <div class="tab-content" id="myTabContent">
+										<div class="tab-pane fade show active" id="home1" role="tabpanel" aria-labelledby="home-tab">
+                      <form class="forms-sample" action="/medicine/addnewmedicinesupplier" method="post">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="exampleInputCity1">Supplier Full Name</label>
+                              <input type="text" class="form-control" id="suppliername" name="suppliername" placeholder="Supplier Full Name">
+                    
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="exampleInputCity1">Supplier Phone Number</label>
+                              <input type="text" class="form-control" id="supplierphone" name="supplierphone" placeholder="Supplier Phone Number">
+                    
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleInputName1">Supplier Address</label>
+                          <input type="text" class="form-control" id="supplieraddress" name="supplieraddress" placeholder="Supplier Address">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputCity1">Supplier Type</label>
+                            <select class="form-control" name="suppliertype" >
+                              <option value="0">Select Supplier Type</option>
+                              <option value="Type_I">Type I(Green)</option>
+                              <option value="Type_II">Type II(Red)</option>
+                            </select>
+                          </div>
+                       
+                       
+                    
+                        <div class="col-md-6 offset-md-3">
+                          <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                      
+                        </div>
+                     
+                      </form>
+										</div>
+										
+									
+										<div class="tab-pane fade" id="contact2" role="tabpane" aria-labelledby="contact2-tab">
+											<table class="table table-striped jambo_table " id="myTable">
+												<thead>
+												  <tr class="headings">
+												    <th class="ml-5">#</th>
+                            <th>Supplier Name</th>
+                            <th>Supplier Phone Number</th>
+                            <th>Supplier Address</th>
+                            <th>Supplier Type</th>
+                            
+                            <th>Action  ToDo</th>
+												  </tr>
+												</thead>
+						
+												<tbody>
+												
+                          <% if (supplierlist.length >0){ %>
+                            <% var i =0; %> 
+                         
+                          <% supplierlist.forEach(function(row){ %>
+                            <% i++ ; %>
+                         <tr>
+                          <td><%= i %></td>
+                           <td><%= row.suppliername %></td>
+                           <td><%= row.supplierphonenumber %></td>
+                           <td><%= row.supplieraddress %></td>
+                           <td><%= row.suppliertype %></td>
+                          
+                           <td><form action="/medicine/deletesupplier/<%= row.supplierid %>" method="get">
+                            <button type="submit" class="btn btn-block btn-danger">Delete<i class=" fa fa-trash"></i></button>
+                          </form></td>
+                         
+                           
+                          </tr>
+                       
+                          <% })} else { %>
+                      
+                            <%  } %>
+
+											
+											  </table>
+										  </div>
+
+									  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+           
+            
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+   
+        <%- include ('./partials/footer')%>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- base:js -->
+  <script src="../../vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <script src="../../vendors/chart.js/Chart.min.js"></script>
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="../../js/off-canvas.js"></script>
+  <script src="../../js/hoverable-collapse.js"></script>
+  <script src="../../js/template.js"></script>
+  <script src="../../js/settings.js"></script>
+  <script src="../../js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="../../../js/dashboard.js"></script>
+  <!-- End custom js for this page-->
+  <script>
+		$(document).ready(function() {
+			$('#myTable').DataTable();
+		});
+	</script>
+	<link href="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.css" rel="stylesheet">
+ 
+	<script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
+</body>
+
+</html>
+

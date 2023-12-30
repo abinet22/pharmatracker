@@ -1,0 +1,162 @@
+
+<link rel="stylesheet" href="../../vendors/mdi/css/materialdesignicons.min.css">
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/dashboard">
+          <i class="typcn typcn-device-desktop menu-icon"></i>
+          <span class="menu-title">Dashboard</span>
+         
+        </a>
+      </li>
+     
+      <!-- <li class="nav-item">
+        <a class="nav-link" href="/admin/addnewproduct">
+          <i class="mdi mdi-database-plus menu-icon"></i>
+          <span class="menu-title">Add To Inventory</span>
+          <div class="badge badge-danger">+</div>
+        </a>
+      </li> -->
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#charts76" data-target="#charts76" aria-expanded="false" aria-controls="charts76">
+          <i class="mdi mdi-database-plus menu-icon"></i>
+          <span class="menu-title">Add To Inventory</span>
+          
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="charts76">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="/admin/addnewproduct">Add Medicine</a></li>
+            <li class="nav-item"> <a class="nav-link" href="/admin/addotherproducttoinventory">Add Other Product</a></li>
+            <li class="nav-item"> <a class="nav-link" href="/admin/transfermedicineproduct">Transfer Products</a></li>
+         
+        </ul>
+        </div>
+      </li>
+<!--    
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+          <i class="mdi mdi-minus
+          menu-icon"></i>
+          <span class="menu-title">Add Credit Sales</span>
+          <div class="badge badge-danger">+</div>
+        
+        </a>
+      </li> -->
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+          <i class="mdi mdi-square-inc-cash menu-icon"></i>
+          <span class="menu-title">Manage Sales</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="charts">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="/admin/todaysalesdata">Today Sales Report</a></li>
+            <li class="nav-item"> <a class="nav-link" href="/admin/allsaleslist">All Sales List</a></li>
+         
+        </ul>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#charts5" aria-expanded="false" aria-controls="charts5">
+          <i class="mdi mdi-database-lock menu-icon"></i>
+          <span class="menu-title">Manage Inventory</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="charts5">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="/admin/inventorylist">Medicine Inv. List </a></li>
+            <li class="nav-item"> <a class="nav-link" href="/admin/inventorylisttypei">Medicine Inv. Type I </a></li>
+            <li class="nav-item"> <a class="nav-link" href="/admin/inventorylisttypeii">Medicine Inv. Type II </a></li>
+            <li class="nav-item"> <a class="nav-link" href="/admin/otherproductinventorylist">Other Product Inv.</a></li>
+           
+            <li class="nav-item"> <a class="nav-link" href="/admin/inventorylog">Medicine Inv. Log</a></li>
+            <li class="nav-item"> <a class="nav-link" href="/admin/inventorylogotherproduct">Other Pro Inv. Log</a></li>
+         
+        </ul>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#charts6" aria-expanded="false" aria-controls="charts6">
+          <i class="mdi mdi-medical-bag menu-icon"></i>
+          <span class="menu-title">Manage Medicine</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="charts6">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="/medicine/addmedicine">Add Medicine</a></li>
+            <li class="nav-item"> <a class="nav-link" href="/medicine/addmedicinecategory">Add Medicine Category</a></li>
+            <li class="nav-item"> <a class="nav-link" href="/medicine/addmedicinegenericname">Add Medicine Generic Name</a></li>
+       
+            <li class="nav-item"> <a class="nav-link" href="/medicine/addmedicinemanufucturer">Add Medicine Brand Name</a></li>
+            <li class="nav-item"> <a class="nav-link" href="/medicine/addmedicinesupplier">Add Medicine Supplier</a></li>
+       
+       
+          </ul>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#charts36" aria-expanded="false" aria-controls="charts36">
+          <i class="mdi mdi-medical-bag menu-icon"></i>
+          <span class="menu-title">Other Product</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="charts36">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="/product/addotherproduct">Add Product</a></li>
+         </ul>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+          <i class="mdi mdi-settings-box menu-icon"></i>
+          <span class="menu-title">Settings</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="ui-basic">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="/setting/adduser">Manage User</a></li>
+          
+            <!-- <li class="nav-item"> <a class="nav-link" href="/setting/addcustomer">Manage Customer</a></li> -->
+            <li class="nav-item"> <a class="nav-link" href="/setting/addshop">Manage Shop</a></li>
+            <li class="nav-item"> <a class="nav-link" href="/setting/addinventory">Manage Inventory</a></li>
+      
+          </ul>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/wallet">
+            <i class="mdi mdi-wallet menu-icon"></i>
+          <span class="menu-title">Wallet</span>
+         
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/report">
+          <i class="mdi mdi-file-chart menu-icon"></i>
+          <span class="menu-title">Report</span>
+         
+        </a>
+      </li>
+   
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/statistics">
+            <i class="mdi mdi-chart-areaspline menu-icon"></i>
+          <span class="menu-title">Statistics</span>
+         
+        </a>
+      </li>
+      
+  
+     
+    </ul>
+  </nav>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          $('.nav-link[href="#"]').on('click', function(e) {
+              e.preventDefault();
+              // Your additional logic
+          });
+      });
+  </script>

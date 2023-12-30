@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title></title>
+  <!-- base:css -->
+  <link rel="stylesheet" href="../../../../vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="../../../../vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../../../../css/vertical-layout-light/style.css">
+  <!-- endinject -->
+  <link rel="stylesheet" href="../../../vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="shortcut icon" href="images/favicon.png" />
+  <style>
+
+
+    .cards {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2px;
+      padding: 20px;
+     
+      text-align: center;
+    }
+
+    .cards h2 {
+      color: #333;
+    }
+
+    .cards span {
+      font-size: 8px;
+      color: #007bff;
+      font-weight: bold;
+    }
+
+    .cards i {
+      font-size: 10px;
+      color: #007bff;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+ 
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <%- include ('./partials/header')%>
+    <!-- partial -->
+  
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_settings-panel.html -->
+   
+      <% if(user.user_roll == "Admin"){%>
+        <%- include ('./partials/sideadmin') %>
+     <% }else if(user.user_roll == "Sales_Manager"){%>
+      <%- include ('./partials/sidesales') %>
+      <% }else if(user.user_roll =="Inventory_Manager"){%>
+        <%- include ('./partials/sideinventory') %>
+        <% }else{%>
+     
+          <% }%>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+
+
+           
+          <div class="row">
+            
+          <% if(user.user_roll == "Admin"){%>
+           
+         
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                
+                  <div class="row">
+            
+          
+           
+         
+                    <div class="col-md-4 grid-margin stretch-card">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title">Total Sale Last 7 Days</h4>
+                          <div class="media">
+                             <i class="mdi mdi-shopping icon-md text-info d-flex align-self-start mr-3"></i>
+                            <div class="media-body">
+                              <ul class="list-ticked">
+                               
+                                <% if (salesDataByDate.length > 0) { %>
+                                  <% salesDataByDate.forEach(function (row, index) { %>
+                                    <li class=" col-md-12 mb-2" style="<%= index === salesDataByDate.length - 1 ? 'background-color: #6a008a;' : '' %>">
+                                   
+                                     <% const originalDate = new Date(row.fromdate);
+                                     const originalDate2 = new Date(row.enddate);
+                                     const options = { year: 'numeric', month: 'short', day: 'numeric' };
+
+            
+                                      const formattedDate1 = originalDate.toLocaleString('en-US', options);
+                                      const formattedDate2 = originalDate2.toLocaleString('en-US', options);
+                                      %>
+                                      <small style="color: <%= index === salesDataByDate.length - 1 ? '#ffffff' : '#007bff'; %>;"><%= index === salesDataByDate.length - 1 ? 'Today: ' : '' %><%= formattedDate1 %> </small><br>
+                                      <% const number = parseFloat(row.sales) %>
+                                      <% const formattedNumber = number.toLocaleString('am-ET', { style: 'currency', currency: 'ETB' }); %>
+                                      <small style="color: <%= index === salesDataByDate.length - 1 ? '#ffffff' : '#007bff'; %>;"><%= index === salesDataByDate.length - 1 ? 'Today Total Sales: ' : 'Total Sales: ' %> <%= formattedNumber %><span style="color: <%= index === salesDataByDate.length - 1 ? '#ffffff' : '#007bff'; %>; font: 2em sans-serif;"></span></small> 
+                               
+                                    </li>
+                                  <% }) %>
+                                <% } %>
+                                 
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4 grid-margin stretch-card">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title">Top 5 Sold Medicine Sale Today(Quantity)</h4>
+                          <hr>
+                          <div class="media">
+                            <div class="media-body">
+                              <ul class="list-ticked">
+                               
+                                <% if(todaysalesbyquantity.length >0){%>
+                                  <% todaysalesbyquantity.forEach(function (row){%>
+                                <li>  <%= row.medicinename %>  &gt;<span><%= row.quantity %></span></li>
+                                 <% }) %>
+                                 <%}%>
+                                 
+                              </ul>
+                            </div>
+                          </div>
+                          <h4 class="card-title">Top 5 Sold Medicine Sale All Time(Quantity)</h4>
+                          <hr>
+                          <div class="media">
+                             <div class="media-body">
+                              <ul class="list-ticked">
+                               
+                                <% if(alltimesalesbyquantity.length >0){%>
+                                  <% alltimesalesbyquantity.forEach(function (row){%>
+                                <li>  <%= row.medicinename %>  &gt;<span><%= row.quantity %></span></li>
+                                 <% }) %>
+                                 <%}%>
+                                 
+                              </ul>
+                            </div>
+                          </div>
+                       
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4 grid-margin stretch-card">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title">Top 5 Sold Medicine Sale Today(By Amount)</h4>
+                          <hr>
+                          <div class="media">
+                             <div class="media-body">
+                              <ul class="list-ticked">
+                               
+                                <% if(todaysalesbyvalue.length >0){%>
+                                  <% todaysalesbyvalue.forEach(function (row){%>
+                                    <% const number3 = parseFloat(row.quantity) %>
+                                    <% const formattedNumber = number3.toLocaleString('am-ET', { style: 'currency', currency: 'ETB' }); %>
+                                  
+                                <li>  <%= row.medicinename %>  &gt;<span><%= formattedNumber %></span></li>
+                                 <% }) %>
+                                 <%}%>
+                                 
+                              </ul>
+                            </div>
+                          </div>
+                          <h4 class="card-title">Top 5 Sold Medicine Sale All Time(By Amount)</h4>
+                          <hr>
+                          <div class="media">
+                               <div class="media-body">
+                              <ul class="list-ticked">
+                               
+                                <% if(alltimesalesbyvalue.length >0){%>
+                                  <% alltimesalesbyvalue.forEach(function (row){%>
+                                    <% const number3 = parseFloat(row.quantity) %>
+                                    <% const formattedNumber = number3.toLocaleString('am-ET', { style: 'currency', currency: 'ETB' }); %>
+                                 
+                                <li>  <%= row.medicinename %>  &gt;<span><%= formattedNumber %></span></li>
+                                 <% }) %>
+                                 <%}%>
+                                 
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
+               
+                </div>
+              </div>
+            </div>
+           
+            <div class="col-md-12">
+           
+              <div class="card">
+             
+               <div class="card-body">
+                <h5 class="card-title">Sales And Inventory </h5>
+                <p class="card-description">
+                 <code>Notifications</code>
+                </p>
+                <div class="col-lg-12 grid-margin ">
+                
+                  <div class="">
+                   <div >
+                    <% if(inventnotification.length >0){%>
+                      <% inventnotification.forEach(function (row){%>
+                   
+                      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      Low Stock Alert!  <br>
+       <%= row.location_name %>  Medicine Name <%= row.medicinename %>/<%= row.genericname %>/<%= row.medicinecategoryname %> Quantity <%= row.quantity %>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+                     <% }) %>
+                     <%}%>
+                   </div>                 
+                   </div>
+                </div>
+              
+               </div>
+           
+              </div>
+            </div>
+            <% }%>
+                
+            <% if(user.user_roll == "Sales_Manager"){%>
+              <div class="col-md-12">
+           
+                <div class="card">
+               
+                 <div class="card-body">
+                  <h5 class="card-title">Sales And Inventory </h5>
+                  <p class="card-description">
+                   <code>Notifications</code>
+                  </p>
+                  <div class="col-lg-12 grid-margin ">
+                    <div class="">
+                     <div >
+                      <% if(inventnotificationshop.length >0){%>
+                        <% inventnotificationshop.forEach(function (row){%>
+                     
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        Low Stock Alert!  <br>
+         <%= row.location_name %>  Medicine Name <%= row.medicinename %>/<%= row.genericname %>/<%= row.medicinecategoryname %> Quantity <%= row.quantity %>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+                       <% }) %>
+                       <%}%>
+                     </div>                 
+                     </div>
+                  </div>
+                
+                 </div>
+             
+                </div>
+              </div>
+              <%}%>
+          </div>
+
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+      <%- include ('./partials/footer') %>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- base:js -->
+  <script src="vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="js/dashboard.js"></script>
+  <script src="../../js/off-canvas.js"></script>
+  <script src="../../js/hoverable-collapse.js"></script>
+  <script src="../../js/template.js"></script>
+  <script src="../../js/settings.js"></script>
+  <script src="../../js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- plugin js for this page -->
+  <script src="../../vendors/chart.js/Chart.min.js"></script>
+  <!-- End plugin js for this page -->
+  <!-- Custom js for this page-->
+  <script src="../../js/chart.js"></script>
+  <!-- End custom js for this page-->
+  <!-- End custom js for this page-->
+</body>
+
+</html>
+

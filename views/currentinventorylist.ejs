@@ -1,0 +1,612 @@
+
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  <!-- base:css -->
+  <link rel="stylesheet" href="../../../vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="../../../vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../../../css/vertical-layout-light/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../../../images/favicon.png" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+<style>
+  /* Pagination styles */
+.pagination {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination li {
+  margin: 0 5px;
+}
+
+.pagination a {
+  display: block;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #333;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.pagination a:hover {
+  background-color: #ddd;
+}
+
+.pagination .active a {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* Optional: Add transition for a smoother hover effect */
+.pagination a, .pagination .active a {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+</style>
+<style>
+  .custom-select {
+    position: relative;
+    width: 200px; /* Adjust the width as needed */
+  }
+
+  #searchinput {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+    margin-bottom: 5px;
+  }
+
+  .custom-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: none;
+    max-height: 150px; /* Adjust the max height as needed */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 4px;
+  }
+
+  .custom-options.show {
+    display: block;
+  }
+
+  .custom-option {
+    padding: 8px;
+    cursor: pointer;
+  }
+
+  .custom-option:hover {
+    background-color: #f2f2f2;
+  }
+</style>
+</head>
+<body>
+ 
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <%- include ('./partials/header') %>
+    <!-- partial -->
+  
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_settings-panel.html -->
+      <% if(user.user_roll == "Admin"){%>
+        <%- include ('./partials/sideadmin') %>
+     <% }else if(user.user_roll == "Sales_Manager"){%>
+      <%- include ('./partials/sidesales') %>
+      <% }else if(user.user_roll =="Inventory_Manager"){%>
+        <%- include ('./partials/sideinventory') %>
+        <% }else{%>
+     
+          <% }%>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+       
+
+            <div class="col-12 grid-margin stretch-card">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item">Manage Inventory</li>
+                  <li class="breadcrumb-item active"><a href="#">Medicine Inventory List</a></li>
+                
+                </ol>
+              </nav>
+              </div>
+
+          <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                   
+      
+                <div class="card-body">
+                  <h4 class="card-title">Filter Inventory</h4>
+                  <p class="card-description">
+                 Filter By Search By Medicine Name
+                  </p>
+                  <form class="forms-sample">
+                                   
+                   <div class="row">
+                    <div class="col-md-12">
+                    <% 
+                    var inventddt = JSON.parse(JSON.stringify(inventory));
+                    var uniquemedicinename = [...new Set(inventddt.map(item => item.medicinename))];
+                    console.log(uniquemedicinename)
+                     %>
+                  
+                
+  
+                      <div class="form-group">
+                        <label for="exampleInputEmail3">Medicine Name</label>
+                    
+                        <select class="form-control" name="medicinename4" id="medicinename">
+  
+                          <option value="0" >Select or type to search</option>
+                       
+                          <% if(inventory.length > 0 ){ %>
+                            
+                          
+                            <% uniquemedicinename.forEach(function(medicinename){  %>
+                              <option value="<%= medicinename %>">  <%= medicinename   %></option>
+                            
+                              <%   })} %>
+                          <!-- Add your other options here -->
+                        </select>
+                        
+                      
+                      
+                      </div>
+                    </div>
+                 
+                   </div>
+                   
+                  
+                   
+                    <div class="col-md-6 offset-md-3">
+                      <button type="button" id="filterinventory" class="btn btn-primary btn-block">Filter</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <%- include ('./partials/messages') %>
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="saledata">
+                   
+                      <div id="filteredInventory">
+                        <table class="table table-striped jambo_table table-responsive " id="myTable">
+                          <thead>
+                            <th>#</th>
+                           
+                            <th>Generic Name</th>
+                            <th>Medicine Name</th>
+                            <th>Medicine Category </th>
+                            <th>Amount</th>
+                            <th>Details</th>
+                          </thead>
+                          <tbody>
+                            <% if(inventorytot.length > 0) { %>
+                              <% var i = 0 %>
+                              <% inventorytot.forEach(function(row) { %>
+                                <% i++ %>
+                                 <tr class="main-row" 
+                                data-medicineid="<%= row.medicineid %>" 
+                                data-genericname="<%= row.genericname %>"
+                                data-medicinecategoryname="<%= row.medicinecategoryname %>"
+                                data-locationname="<%= row.location_name %>">
+                              <!-- ... Rest of your main row content ... -->
+                            
+                                  <td><%= i %></td>
+                                 
+                                  <td><%= row.genericname %></td>
+                                  <td><%= row.medicinename %></td>
+                                  <td><%= row.medicinecategoryname %></td>
+                                  <td><%= row.totalamount %></td>
+                                  <td>
+                                    <!-- Button to toggle visibility of nested rows -->
+                                    <button class="btn btn-info btn-sm toggle-details" data-medicineid="<%= row.medicineid %>">
+                                      Show Details
+                                    </button>
+                                  </td>
+                                </tr>
+                                <!-- Nested table for additional details -->
+                                <tr class="nested-row" 
+                                data-medicineid="<%= row.medicineid %>" 
+                                data-genericname="<%= row.genericname %>"
+                                data-medicinecategoryname="<%= row.medicinecategoryname %>"
+                                data-locationname="<%= row.location_name %>"
+                                style="display: none;">
+                                <td colspan="12">
+                                    <table  class="table table-bordered" id="nested-table">
+                                      <thead>
+                                      
+                                        <th>Drug Info/Product Code/</th>
+                                        <th>Batch No</th>
+                                        <th>Expiry Date</th>
+                                       
+                                        <th>Amount </th>
+                                      </thead>
+                                      <tbody>
+                                        <% var matchingDetails = inventory.filter(function(item) { return item.medicineid === row.medicineid &&
+                                          item.genericname === row.genericname &&  item.location_name === row.location_name &&
+                                          item.medicinecategoryname === row.medicinecategoryname; }); %>
+                                        <% matchingDetails.forEach(function(detail) { %>
+                                           <%
+                                            var date2 = new Date(detail.expirydate);
+                                            var date1 = new Date();
+                                            var monthsLeft = Math.floor((date2 - date1) / (1000 * 60 * 60 * 24 * 30.44)); 
+                                            var badgeClass = "";
+                                            
+                                            if (monthsLeft < 4) {
+                                              badgeClass = "badge-danger"; 
+                                             
+                                              expireRowClass = "table-danger";
+                                            } else if (monthsLeft >= 4 && monthsLeft <= 6) {
+                                              badgeClass = "badge-warning";
+                                              expireRowClass="table-warning";
+                                            } else {
+                                              badgeClass = "badge-success"; 
+                                              expireRowClass ="table-success";
+                                            }
+                                            %>
+                                          <tr class="<%= expireRowClass %>">
+                                           
+                                          <td><%= detail.genericname %><br><%= detail.medicinename %>/<%= detail.productcode %>/
+                                           </td>
+                                           <td><%= detail.batchno %></td>
+                                           <td>
+                                           
+                                               <span class="badge <%= badgeClass %>"><%= new Date(detail.expirydate).toLocaleDateString() %></span>
+                                            </td>
+                                            
+                                           <td><%= detail.quantity %></td>
+                                           
+                                         </tr>
+                                        <% }) %>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                              <% }) }%>
+                            </tbody>
+                          </table>
+                      </div>
+                      
+                    
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="row ">
+              <div class="col-md-8 offset-md-2">
+                <ul class="pagination">
+                  <% if (currentPage > 0) { %>
+                    <li>
+                      <a href="?page=0">First</a>
+                    </li>
+                    <li>
+                      <a href="?page=<%= currentPage - 1 %>">Previous</a>
+                    </li>
+                  <% } %>
+                
+                  <% const startPage = Math.max(0, currentPage - 2); %>
+                  <% const endPage = Math.min(totalPages - 1, startPage + 4); %>
+                
+                  <% for (let i = startPage; i <= endPage; i++) { %>
+                    <li class="<%= i === currentPage ? 'active' : '' %>">
+                      <a href="?page=<%= i %>"><%= i + 1 %></a>
+                    </li>
+                  <% } %>
+                
+                  <% if (currentPage < totalPages - 1) { %>
+                    <li>
+                      <a href="?page=<%= currentPage + 1 %>">Next</a>
+                    </li>
+                    <li>
+                      <a href="?page=<%= totalPages - 1 %>">Last</a>
+                    </li>
+                  <% } %>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+       
+
+<!-- jQuery (required) -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+
+<script>
+  $(document).ready(function () {
+    // Your existing data (replace with your actual data)
+    var invdt = '<%= JSON.stringify(inventorytot) %>';
+    const cleanedInventJSON = invdt.replace(/&#34;/g, '"');
+    var inventoryData = JSON.parse(cleanedInventJSON);
+    var invdt2 = '<%= JSON.stringify(inventory) %>';
+    const cleanedInventJSON2 = invdt2.replace(/&#34;/g, '"');
+    var inventoryData2 = JSON.parse(cleanedInventJSON2);
+
+    // Populate Medicine Name dropdown
+    // var medicinenameDropdown = $('#medicinename');
+    // var uniqueMedicineNames = [...new Set(inventoryData.map(item => item.medicinename))];
+    // uniqueMedicineNames.forEach(function (medicineName) {
+    //   medicinenameDropdown.append(`<option value="${medicineName}">${medicineName}</option>`);
+    // });
+
+    // // Populate Shop/Inventory Name dropdown
+    // var shopwarenameDropdown = $('#shopwarename');
+    // var uniqueShopwareNames = [...new Set(inventoryData.map(item => item.location_name))];
+    // uniqueShopwareNames.forEach(function (shopwareName) {
+    //   shopwarenameDropdown.append(`<option value="${shopwareName}">${shopwareName}</option>`);
+    // });
+
+    // Filter function
+    $('#filterinventory').on('click', function () {
+      var selectedMedicine = document.getElementById('medicinename').value;
+   
+      // Perform filtering based on selected values
+      var filteredInventory = inventoryData.filter(function (item) {
+        return (selectedMedicine === '0' || item.medicinename === selectedMedicine) 
+      });
+
+      // Display filtered results
+      displayInventory(filteredInventory);
+    });
+
+    // Function to display filtered inventory
+    var inventoryTable = $('#filteredInventory').find('table');
+    displayInventory(inventoryData);
+
+    // Function to display inventory
+    function displayInventory(inventory) {
+      var tbody = inventoryTable.find('tbody');
+      tbody.empty();
+
+      inventory.forEach(function (item, index) {
+        tbody.append(`
+          <tr class="main-row" data-medicineid="${item.medicineid}"  
+                                data-genericname="${item.genericname}"
+                                data-medicinecategoryname="${item.medicinecategoryname}"
+                                data-locationname="${item.warehouseid}" >
+            <td>${index + 1}</td>
+           
+            <td>${item.genericname}</td>
+            <td>${item.medicinename}</td>
+            <td>${item.medicinecategoryname}</td>
+            <td>${item.totalamount}</td>
+            <td>
+              <button class="btn btn-info btn-sm toggle-details" data-medicineid="${item.medicineid}">
+                Show Details
+              </button>
+            </td>
+          </tr>
+          <!-- Nested table for additional details -->
+          <tr class="nested-row" 
+              data-medicineid="${item.medicineid}" 
+              data-genericname="${item.genericname}"
+              data-medicinecategoryname="${item.medicinecategoryname}"
+              data-locationname="${item.warehouseid}"
+              style="display: none;">
+            <td colspan="6">
+              <table class="table table-bordered">
+                <thead>
+                  <th>Drug Info/Product Code/</th>
+                  <th>Batch No</th>
+                  <th>Expiry Date</th>
+                 
+                  <th>Amount</th>
+                </thead>
+                <tbody id="nested-table-${item.medicineid}-${item.warehouseid}"></tbody>
+              </table>
+            </td>
+          </tr>
+        `);
+
+        // Generate nested rows dynamically
+        var nestedTableBody = $(`#nested-table-${item.medicineid}-${item.warehouseid}`);
+        var matchingDetails = inventoryData2.filter(function (detail) {
+          return item.medicineid === detail.medicineid &&
+                 item.genericname === detail.genericname &&
+                 item.location_name === detail.location_name &&
+                 item.medicinecategoryname === detail.medicinecategoryname;
+        });
+
+        matchingDetails.forEach(function (detail) {
+          var date2 = new Date(detail.expirydate);
+          var date1 = new Date();
+          var monthsLeft = Math.floor((date2 - date1) / (1000 * 60 * 60 * 24 * 30.44));
+          var badgeClass = "";
+
+          if (monthsLeft < 4) {
+            badgeClass = "badge-danger";
+            expireRowClass = "table-danger";
+          } else if (monthsLeft >= 4 && monthsLeft <= 6) {
+            badgeClass = "badge-warning";
+            expireRowClass = "table-warning";
+          } else {
+            badgeClass = "badge-success";
+            expireRowClass = "table-success";
+          }
+
+          nestedTableBody.append(`
+            <tr class="${expireRowClass}">
+              <td>${detail.genericname}<br>${detail.medicinename}/${detail.productcode}/</td>
+              <td>${detail.batchno}</td>
+              <td>
+                  <span class="badge ${badgeClass}">${new Date(detail.expirydate).toLocaleDateString()}</span>
+              </td>
+           
+              <td>${detail.quantity}</td>
+            </tr>
+          `);
+        });
+      });
+    }
+  });
+</script>
+
+
+      <script>
+        $(document).ready(function () {
+  // Existing code...
+
+  // Delegate click event to a static parent element
+  $('#filteredInventory').on('click', '.toggle-details', function () {
+    var mainRow = $(this).closest('.main-row');
+    var medicineId = mainRow.data('medicineid');
+    var genericName = mainRow.data('genericname');
+    var category = mainRow.data('medicinecategoryname');
+    var locationName = mainRow.data('locationname');
+    console.log(medicineId);
+    console.log(genericName);
+    console.log(category);
+    console.log(locationName);
+
+    // Use multiple criteria for filtering
+    var nestedRow = $('.nested-row[data-medicineid="' + medicineId + '"][data-genericname="' + genericName + '"][data-medicinecategoryname="' + category + '"][data-locationname="' + locationName + '"]');
+
+    // Check the current display property
+    var currentDisplay = nestedRow.css('display');
+
+    // Toggle the display property
+    if (currentDisplay === 'none') {
+      nestedRow.css('display', 'table-row');
+    } else {
+      nestedRow.css('display', 'none');
+    }
+  });
+});
+
+      </script>
+        
+        
+<script>
+  function selectOption(value) {
+    // Handle the selected option
+    console.log("Selected:", value);
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var searchInput = document.getElementById("searchinput");
+    var optionsContainer = document.getElementById("medicinenameOptions");
+    var options = Array.from(document.querySelectorAll(".custom-option"));
+
+    searchInput.addEventListener("input", function () {
+      var searchTerm = searchInput.value.toLowerCase();
+
+      // Show/hide options based on search term
+      options.forEach(function (option) {
+        var optionText = option.textContent.toLowerCase();
+        if (optionText.includes(searchTerm)) {
+          option.style.display = "block";
+        } else {
+          option.style.display = "none";
+        }
+      });
+
+      // Show/hide the options container based on the number of visible options
+      var visibleOptions = options.filter(function (option) {
+        return option.style.display !== "none";
+      });
+
+      optionsContainer.classList.toggle("show", visibleOptions.length > 0);
+    });
+  });
+</script>
+
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+       <%- include ('./partials/footer') %>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- Include Select2 CSS -->
+
+  <!-- container-scroller -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var select = document.getElementById("medicinename");
+      var options = Array.from(select.options);
+  
+      var searchInput = document.createElement("input");
+      searchInput.setAttribute("type", "text");
+      searchInput.setAttribute("placeholder", "Search");
+      select.parentNode.insertBefore(searchInput, select.nextSibling);
+  
+      searchInput.addEventListener("input", function () {
+        var searchTerm = searchInput.value.toLowerCase();
+  
+        // Remove all options
+        select.innerHTML = "";
+  
+        // Add the default option back
+        var defaultOption = document.createElement("option");
+        defaultOption.value = "0";
+        defaultOption.disabled = true;
+        defaultOption.hidden = true;
+        defaultOption.textContent = "Select or type to search";
+        select.appendChild(defaultOption);
+  
+        // Add options that match the search term
+        options.forEach(function (option) {
+          if (option.textContent.toLowerCase().includes(searchTerm)) {
+            select.appendChild(option.cloneNode(true));
+          }
+        });
+      });
+    });
+  </script>
+  <!-- base:js -->
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <script src="../../../../vendors/chart.js/Chart.min.js"></script>
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="../../../../js/off-canvas.js"></script>
+  <script src="../../../js/hoverable-collapse.js"></script>
+  <script src="../../../js/template.js"></script>
+  <script src="../../../js/settings.js"></script>
+  <script src="../../../js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="../../../../js/dashboard.js"></script>
+  <!-- End custom js for this page-->
+  
+  <!-- Include jQuery (if not already included) -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  
+  <!-- Include Select2 JS -->
+
+   <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+   <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+   
+	<!-- <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.css" rel="stylesheet">
+ 
+	<script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script> -->
+</body>
+
+</html>
+

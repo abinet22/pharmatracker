@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title></title>
+  <!-- base:css -->
+  <link rel="stylesheet" href="../../../vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="../../../vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../../../css/vertical-layout-light/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../../../images/favicon.png" />
+</head>
+<body>
+ 
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <%- include ('./partials/header')%>
+    <!-- partial -->
+  
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_settings-panel.html -->
+   
+  
+      <!-- partial -->
+      <!-- partial:partials/_sidebar.html -->
+    
+      <% if(user.user_roll == "Admin"){%>
+        <%- include ('./partials/sideadmin') %>
+     <% }else if(user.user_roll == "Sales_Manager"){%>
+      <%- include ('./partials/sidesales') %>
+      <% }else if(user.user_roll =="Inventory_Manager"){%>
+        <%- include ('./partials/sideinventory') %>
+        <% }else{%>
+     
+          <% }%>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+              <%- include ('./partials/messages') %>
+              <div class="card-body">
+                <h4 class="card-title">Filter Statistics</h4>
+                <p class="card-description">
+               Sales And Inventory Statistics
+                </p>
+                <form class="forms-sample" action="/report/searchstatistics" method="post">
+                                 
+                  <div class="form-group">
+                    <label for="exampleInputEmail3">Statistics Type</label>
+                  <select class="form-control" name="reporttype" id="reporttype" onchange="openfilterbar(this)" >
+                    <option value="0">Please Select Statistics Type</option>
+                    <option value="IS">Inventory Statistics</option>
+                 
+                    <option value="SS">Sales Statistics</option>
+                  </select>
+                  
+                  </div>
+                 
+                  <!-- <div class="row" id="ioh" style="display: none;">
+                    <div class="row mb-2">
+                      <div class="col-md-4">
+                        <label for="exampleSelectGender">Select Inventory</label>
+                  
+                      </div>
+                      <div class="col-md-8">
+                        <select class="form-control input-sm" id="inventoryname"  name="inventoryname" >
+                          <option value="0">Please Select Inventory Name</option>
+                       <% if(shoplist.length > 0 ){ %>
+                        <% shoplist.forEach(function(row){  %>
+                          <option value="<%= row.shopid %>">  <%= row.shopname   %></option>
+                        
+                          <%   })} %>
+                          <% if(warelist.length > 0 ){ %>
+                            <% warelist.forEach(function(row){  %>
+                              <option value="<%= row.invid %>">  <%= row.inventoryname   %></option>
+                            
+                              <%   })} %>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row mb-2">
+                      <div class="col-md-4">
+                        <label for="exampleSelectGender">Statistics Type</label>
+                  
+                      </div>
+                      <div class="col-md-8">
+                        <select class="form-control input-sm" id="invstattype"  name="invstattype" >
+                          <option value="0">Please Select Inventory Statistics Type</option>
+                        
+                          <option value="ito">Inventory turnover rate: Calculate how quickly inventory is sold and restocked.</option>
+                          <option value="soos">Stockouts and overstock: Track instances of products being out of stock or overstocked.</option>
+                          <option value="sp">Supplier performance: Evaluate the reliability and efficiency of suppliers.</option>
+                         
+                        </select>
+                      </div>
+                    </div>
+                  </div> -->
+                
+                  <!-- <div class="row" id="ls" style="display: none;">
+                    <div class="row mb-2">
+                      <div class="col-md-4">
+                        <label for="exampleSelectGender">Select Shop</label>
+                  
+                      </div>
+                      <div class="col-md-8">
+                        <select class="form-control input-sm" id="salesshop"  name="salesshop" >
+                          <option value="0">Please Select Shop Name</option>
+                       <% if(shoplist.length > 0 ){ %>
+                        <% shoplist.forEach(function(row){  %>
+                          <option value="<%= row.shopid %>">  <%= row.shopname   %></option>
+                        
+                          <%   })} %>
+                         
+                        </select>
+                      </div>
+                    </div> -->
+                    <!-- <div class="row mb-2">
+                      <div class="col-md-4">
+                        <label for="exampleSelectGender">Statistics Type</label>
+                  
+                      </div>
+                      <div class="col-md-8">
+                        <select class="form-control input-sm" id="stattype"  name="stattype" >
+                          <option value="0">Please Select Sales Statistics Type</option>
+                          <option value="st">Total sales revenue: Track the total revenue generated by the pharmacy over time.</option>
+                          <option value="pp">Sales growth rate: Measure the percentage increase or decrease in sales compared to a previous period.</option>
+                          <option value="oe">Sales by category: Analyze sales by product categories.</option>
+                          <option value="bsp">Best-selling products Vs Slow-moving products: Determine which products are top sellers and contribute the most to revenue vs low ones</option>
+                          <option value="ep">Expenses and profitability</option>
+                          <option value="oe">Employee productivity</option>
+                          <option value="ep">Expenses and profitability</option>
+                        </select>
+                      </div>
+                    </div> 
+                  </div>-->
+                  <div class="col-md-6 offset-md-3">
+                    <button type="submit" class="btn btn-primary btn-block">Extract</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <script>
+            function openfilterbar(rt){
+
+             var filter = rt.value;
+             var ioh = document.getElementById('ioh');
+             var ls = document.getElementById('ls');
+           
+             if(filter ==="IS"){
+               ioh.style.display  = "block";
+               ls.style.display = "none";
+           
+             }else if(filter ==="SS"){
+               ls.style.display = "block";
+               ioh.style.display  = "none";
+             
+             }
+           
+             else{
+              ls.style.display = "none";
+               ioh.style.display  = "none";
+               
+             }
+            }
+          </script>
+
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        <%- include ('./partials/footer')%>
+        <!-- partial -->
+      
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- base:js -->
+  <script src="../../../vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <script src="../../../vendors/chart.js/Chart.min.js"></script>
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="../../../js/off-canvas.js"></script>
+  <script src="../../../js/hoverable-collapse.js"></script>
+  <script src="../../../js/template.js"></script>
+  <script src="../../../js/settings.js"></script>
+  <script src="../../../js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="../../../js/dashboard.js"></script>
+  <!-- End custom js for this page-->
+</body>
+
+</html>
+

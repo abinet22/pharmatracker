@@ -1,0 +1,43 @@
+{
+  "name": "caethiopiainventory",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abinet22/CAEthiopiaInventory.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abinet22/CAEthiopiaInventory/issues"
+  },
+  "homepage": "https://github.com/abinet22/CAEthiopiaInventory#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "cors": "^2.8.5",
+    "docxtemplater": "^3.42.7",
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.17.2",
+    "json2csv": "^5.0.7",
+    "multer": "^1.4.4",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.5.1",
+    "nodemon": "^2.0.15",
+    "number-to-words": "^1.2.4",
+    "passport": "^0.5.2",
+    "passport-local": "^1.0.0",
+    "pizzip": "^3.1.4",
+    "read-excel-file": "^5.2.28",
+    "sequelize": "^6.33.0",
+    "util": "^0.12.5",
+    "uuid": "^8.3.2"
+  }
+}

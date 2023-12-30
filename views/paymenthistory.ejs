@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title></title>
+  <!-- base:css -->
+  <link rel="stylesheet" href="../../vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="../../vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../../css/vertical-layout-light/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../../images/favicon.png" />
+</head>
+<body>
+ 
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="navbar-brand-wrapper d-flex justify-content-center">
+        <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+          <a class="navbar-brand brand-logo" href="/dashboard"><img src="../../images/logo.png" alt="logo"/></a>
+          <a class="navbar-brand brand-logo-mini" href="/dashboard"><img src="../../images/logo.png" alt="logo"/></a>
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="typcn typcn-th-menu"></span>
+          </button>
+        </div>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+    
+        <ul class="navbar-nav navbar-nav-right">
+          <li class="nav-item nav-date dropdown">
+            <a class="nav-link d-flex justify-content-center align-items-center" href="javascript:;">
+              <h6 class="date mb-0">Today : Mar 23</h6>
+              <i class="typcn typcn-calendar"></i>
+            </a>
+          </li>
+       
+          <li class="nav-item dropdown mr-0">
+            <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center" id="notificationDropdown" href="#" data-toggle="dropdown">
+             
+              <i class="typcn typcn-eject text-primary"></i>
+              <span class="count"></span>
+            </a>
+           
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+          <span class="typcn typcn-th-menu"></span>
+        </button>
+     
+      </div>
+    </nav>
+    <!-- partial -->
+  
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_settings-panel.html -->
+   
+  
+      <!-- partial -->
+      <!-- partial:partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard">
+              <i class="typcn typcn-device-desktop menu-icon"></i>
+              <span class="menu-title">Dashboard</span>
+             
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#charts2" aria-expanded="false" aria-controls="charts">
+              <i class="typcn typcn-document-text menu-icon"></i>
+              <span class="menu-title">Add To Inventory</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="charts2">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="/addnewproduct"> With Single Method </a></li>
+                <li class="nav-item"> <a class="nav-link" href="/bulkaddnewproduct"> With Bulk Method</a></li>
+             
+            </ul>
+            </div>
+          </li>
+       
+          <li class="nav-item">
+            <a class="nav-link" href="/addsales">
+              <i class="typcn typcn-document-text menu-icon"></i>
+              <span class="menu-title">New Sales</span>
+              <div class="badge badge-danger">+</div>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/addpayment">
+              <i class="typcn typcn-document-text menu-icon"></i>
+              <span class="menu-title">Accept Credits</span>
+              <div class="badge badge-danger">+</div>
+            
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+              <i class="typcn typcn-chart-pie-outline menu-icon"></i>
+              <span class="menu-title">Transaction Log</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="charts">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="/salestransaction">Sales Transaction</a></li>
+                <li class="nav-item"> <a class="nav-link" href="/inventorytransaction">Inventory Transaction</a></li>
+             
+            </ul>
+            </div>
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+              <i class="typcn typcn-document-text menu-icon"></i>
+              <span class="menu-title">Settings</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="ui-basic">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="/adduser">Add User</a></li>
+                <li class="nav-item"> <a class="nav-link" href="/addaccount">Add Account</a></li>
+                <li class="nav-item"> <a class="nav-link" href="/addcustomer">Add Customer</a></li>
+                <li class="nav-item"> <a class="nav-link" href="/addinventory">Add Inventory</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/data">
+                <i class="typcn typcn-chart-pie-outline menu-icon"></i>
+              <span class="menu-title">Data</span>
+             
+            </a>
+          </li>
+          
+      
+         
+        </ul>
+      </nav>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+
+            <% var paymenthistory; %>
+
+          <div class="row">
+            <div class="col-md-12">
+           
+              <div class="card">
+             
+               <div class="card-body">
+                <h5 class="card-title">Credit Payment List</h5>
+                <p class="card-description">
+                 <code>LIst Of Credit Payment Transaction Order By Day Of Payment ASC</code>
+                </p>
+                <div class="table-responsive pt-3">
+                  <table class="table table-striped project-orders-table">
+                    <thead>
+                      <tr>
+                        <th class="ml-5">#</th>
+                        <th>Customer Name</th>
+                     
+                        <th>Note</th>
+                        <th>Total Amount</th>
+                        <th>Payment Option</th>
+                        <th>If Bank? BankName</th>
+                        <th>If Bank? Transaction ID</th>
+                       
+                        <th>Date</th>
+                       
+                       
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% if (creditlog.length >0){ %>
+                          <% var i =0; %> 
+                          <% paymenthistory = creditlog %>
+                        <% creditlog.forEach(function(row){ %>
+                          <% i++ ; %>
+                       
+                          <% var date1 = new Date(row.createdat); %>
+                          <% var date2 = new Date(); %>
+                            <% var diffTime = Math.abs(date2 - date1); %>
+                             <% var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); %>
+                          <tr>
+                            <td># <%= i %></td>
+                            <td style="text-transform: uppercase;">
+                              
+                              <% var cust =  row.customername %>
+                              <% if (customer.length >0){ %>
+                                                              
+                                <% customer.forEach(function(row){ %>
+                                  <% if (cust == row.customername){ %>
+                              <%= row.customername %> <br>
+                                    
+                                     <a href="tel: <%= row.customerphone %> "> Call <%= row.customerphone %> </a>    
+                                    <% } %>
+                                  <% })} else { %>
+                                            
+                                    <%  } %>
+                            </td>
+                            <td> <%= row.notes %></td>
+                            <td> $<%= row.totalpayment %></td>
+                            <td style="text-transform: uppercase;"> <%= row.paymentoption %> 
+                            </td>
+                        
+                            <td><%= row.accountname %></td>
+
+                            <td> <%= row.transactionid %></td>
+                           
+                            <td>
+                              <%= diffDays %> days ago <br>
+                              <%= row.createdat %>
+                            </td>
+                           
+                          </tr>
+
+                          <% })} else { %>
+                      
+                    <%  } %>
+                   
+                
+                    </tbody>
+                  </table>
+                </div>
+               </div>
+            <div class="card-footer">
+              
+            </div>
+              </div>
+            </div>
+          </div>
+        
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/dt/dt-1.10.22/datatables.min.css"/>
+        <script type="text/javascript" src="https://cdn.datatables.net/r/dt/dt-1.10.22/datatables.min.js"></script>
+      <script>
+        function isJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+} ;  
+var paymenthistory ;
+ if (isJson('<%- JSON.stringify(paymenthistory) %>')){
+    paymenthistory= '<%- JSON.stringify(paymenthistory) %>';
+  
+}else{
+    //report the error
+    paymenthistory = 0 ; 
+} 
+       console.log(paymenthistory);
+$('#myTable').DataTable({
+  
+   
+    "dataSrc": function (paymenthistory) {
+      var return_data = new Array();
+      for(var i=0;i< paymenthistory.length; i++){
+        return_data.push({
+          'paymentid': paymenthistory[i].paymentid,
+          'customername': paymenthistory[i].customername,
+          'notes' : paymenthistory[i].notes
+        })
+      }
+      return return_data;
+    },
+              "columns": [
+              { "data": "paymentid" },
+              { "data": "customername" },
+              { "data": "notes" },
+          
+          ]
+          });  
+         
+        
+      
+       </script>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        <footer class="footer">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2022 <a href="https://www.techlinktechnologies.com/" class="text-muted" target="_blank"></a>. All rights reserved.</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center text-muted"> <a href="https://www.techlinktechnologies.com/" class="text-muted" target="_blank"> </a> TechLinkTechnologies</span>
+                    </div>
+                </div>    
+            </div>        
+        </footer>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- base:js -->
+  <script src="../../vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <script src="../../vendors/chart.js/Chart.min.js"></script>
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="../../js/off-canvas.js"></script>
+  <script src="../../js/hoverable-collapse.js"></script>
+  <script src="../../js/template.js"></script>
+  <script src="../../js/settings.js"></script>
+  <script src="../../js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="../../js/dashboard.js"></script>
+  <!-- End custom js for this page-->
+</body>
+
+</html>
+

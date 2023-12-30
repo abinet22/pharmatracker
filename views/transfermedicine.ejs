@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title></title>
+  <!-- base:css -->
+  <link rel="stylesheet" href="../../../vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="../../../vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../../../css/vertical-layout-light/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../../../images/favicon.png" />
+  <link href="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.css" rel="stylesheet">
+  <script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
+  <style>
+    /* Style for the search input */
+    #searchInput {
+        width: 100%;
+        padding: 5px;
+        margin-bottom: 10px;
+    }
+</style>
+<style>
+  /* Define a custom class for styling select options */
+  .custom-option {
+      color: red; /* Set the desired color */
+  }
+</style>
+
+  <link rel="stylesheet" href="../../../../vendors/select2/select2.min.css">
+</head>
+<body onload="createTable()">
+ 
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <%- include ('./partials/header')%>
+    <!-- partial -->
+  
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_settings-panel.html -->
+   
+  
+      <!-- partial -->
+      <!-- partial:partials/_sidebar.html -->
+    
+      <% if(user.user_roll == "Admin"){%>
+        <%- include ('./partials/sideadmin') %>
+     <% }else if(user.user_roll == "Sales_Manager"){%>
+      <%- include ('./partials/sidesales') %>
+      <% }else if(user.user_roll =="Inventory_Manager"){%>
+        <%- include ('./partials/sideinventory') %>
+        <% }else{%>
+     
+          <% }%>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item " aria-current="page">Add To Inventory</li>
+                <li class="breadcrumb-item active"><a href="#">Transfer Products</a></li>
+            </ol>
+          </nav>
+          <div class="col-lg-12">
+            
+            <%- include ('./partials/messages') %>
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+              <%= info %>
+            
+            </div>
+            <div class="row">
+              <div class="col-md-6  grid-margin stretch-card">
+                <div class="card">
+                 
+                  <div class="alert alert-dismissible fade show col-sm-12" role="alert" id="success" style="display:none;">
+                    <p id="successmsg"></p>
+                    <!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button> -->
+                  </div>
+                  <div class="card-body">
+                    <h4 class="card-title">Transfer Products</h4>
+                  
+                    <form class="forms-sample"  >
+                     
+                      <div class="row mt-2">
+                        <div class="col-md-4">
+                          <label for="exampleSelectGender">Search /Select<code>Product Name</code> </label>
+                    
+                        </div>
+                        <div class="col-md-8">
+                       
+                          <input type="text" id="searchInput" placeholder="Search Product Name">
+                          <select id="medicinename"  name="medicinename"  class="form-control "  > <!-- Use a size attribute to show multiple options -->
+                            <option value="0">Please Select Product Name</option>
+                            <% if(medicinelist.length > 0 ){ %>
+                             <% medicinelist.forEach(function(row){  %>
+                              <% var bpc =  row.batchno===""?row.productcode:row.batchno  %>
+                              <% var expiredt = new Date(row.expirydate);
+                              var currentDate = new Date();
+                              var daysleft = Math.ceil((expiredt - currentDate) / (1000 * 60 * 60 * 24)); %>
+                           <option value="<%= row.invid %>" data-medicineid="<%= row.medicineid %>">
+                               <%= row.medicinename %> / <%= bpc %> /--(<%= daysleft %> Days Left)(<%= row.quantity %>)
+                           </option>
+                               <%   })} %>
+                              <!-- Add more options as needed -->
+                          </select>
+                        </div>
+                      </div>
+                      
+                    
+                   
+                      <div class="row mt-2">
+                        <div class="col-md-4">
+                          <label for="exampleSelectGender">Product Code</label>
+                    
+                        </div>
+                        <div class="col-md-8">
+                        <input type="text" name="productcode"  id="productcode" class="form-control">
+                        </div>
+                      </div>
+                     
+                      <div class="row">
+                        <div class="col-md-12" style="display: none;">
+                          <div class="row mt-2">
+                            <div class="col-md-4">
+                              <label for="exampleSelectGender">Unit Price</label>
+                        
+                            </div>
+                            <div class="col-md-8">
+                               
+                             <label class="mt-2 mb-2"><code>Unit Price:</code> <input id="unitprice" type="text"></label>
+                            <input type="text" name="sellunitprice" id="sellunitprice"  class="form-control" onkeypress='return isNumberKey(event)'>
+                            </div>
+                          </div>
+                         
+                        </div>
+                       <div class="col-md-12">
+                        <div class="row mt-2">
+                          <div class="col-md-4">
+                            <label for="exampleSelectGender">Quantity</label>
+                      
+                          </div>
+                          <div class="col-md-8">
+                          <input type="text" name="amount"  id="amount" class="form-control" onkeypress='return isNumberKey(event)'>
+                          <br>
+                          <label class="mt-2 mb-2"><code>Amount In Inventory:</code> <span id="amountininventory"></span></label><br>
+                          <label class="mt-2 mb-2"><code>Sub Total Cost:</code> <span id="subtotal"></span></label><br>
+                   
+                        </div>
+
+                        </div>
+                       </div>
+                      </div>
+                     
+                    
+                    
+                      <div class="col-md-8 offset-md-2 mt-4">
+                        <button type="button" class="btn  btn-primary btn-block"  id="addamount">Add To Cart</button>
+                     
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+      
+              <div class="col-md-6">
+               
+                <div class="card ">
+                	<div class="card-body">
+                    <div class="" id="combinationlist">
+                    <i class="mdi mdi-cart menu-icon icon-lg"></i>	<label><code>Transfer Cart Product List Will Be Here!</code></label><br>
+                      <!-- <ul class="col-md-6 col-sm-6" id="list">
+
+                      </ul> -->
+                      <table class="table  table-striped table-sm table-responsive "  id="myTable2">
+                        <thead>
+                            <th>Action</th>
+                          <th>Product Name</th>
+                        
+                          <th>Quantity </th>
+                          <th>Cost Unit Price</th>
+                          
+                          <th>Total Cost</th>
+                         
+                        </thead>
+                        <tbody id="tablerow">
+                          
+                          
+                        </tbody>
+                        <tfoot>
+                          <tr id="totallast" style="display: none;">
+                            <td colspan="4"><h3>Total Cost</h3></td>
+                            <td id="totalAmount">0</td>
+                            <td></td>
+                          </tr>
+                          </tfoot>
+                      </table>
+                    </div>
+                    <div class="item form-group">
+                      <label>Total Cost Amount:-&nbsp;</label><h1 id="totalsaleamount"></h1>
+                      <div class="col-md-6 col-sm-6 offset-md-3">
+                      <form action="/admin/newproducttransfer" method="post">
+                        <input type="hidden" name="rowmaterialamountobjarray" id="rowmaterialamountobjarray">
+                        <input type="hidden" name="totalamount" id="totalamount">
+                        <input type="hidden" name="frominventory" id="frominventory" value="<%= frominventory %>">
+                        <input type="hidden" name="toinventory" id="toinventory" value="<%= toinventory %>">
+                        <button type="submit" class="btn btn-success btn-block">Submit</button>
+                      </form>
+                      </div>
+                    </div>
+                  </div>
+                 </div>
+              </div> 
+            </div>
+          </div>
+        
+          
+
+         
+            
+            
+            </div>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script src ="https://cdnjs.cloudflare.com/ajax/libs/jquery-json/2.4.0/jquery.json.min.js"></script>
+     
+            <script>
+                  function isNumberKey(evt)
+{
+var charCode = (evt.which) ? evt.which : evt.keyCode;
+if (charCode != 46 && charCode > 31 
+  && (charCode < 48 || charCode > 57))
+
+   return false;
+
+return true;
+}
+            </script>
+             <script>
+             
+              document.addEventListener("DOMContentLoaded", function () {
+                const rowMaterialAmountArray = []; // Initialize an empty array to store JSON objects
+                 
+                document.getElementById("addamount").addEventListener("click", function () {
+                  const medicineName = document.getElementById("medicinename").value;
+                
+                  const sellamountInput = document.getElementById("sellunitprice");
+                  const totalamount = document.getElementById("amount");
+                  
+                  const productcode = document.getElementById('productcode').value;
+                  const sellprice = parseFloat(sellamountInput.value); // Parse the input as a float
+                
+                  const quantity = parseFloat(totalamount.value); 
+                  const medicinenameso = document.getElementById("medicinename");
+                  const so1 = medicinenameso.options[medicinenameso.selectedIndex];
+                  const medicineWithQuantity = so1.text; // Original value including quantity
+
+                  const medicine = medicineWithQuantity.replace(/\([^)]*\)/, '');
+
+               
+const selectedOption = medicinenameso.options[medicinenameso.selectedIndex];
+const medicineIds = selectedOption.getAttribute("data-medicineid");
+                  const pup = document.getElementById("sellunitprice");
+              const iup = document.getElementById("unitprice");
+              const amountininv = document.getElementById('amountininventory');
+              var whatsininv =parseFloat(amountininv.innerHTML);
+              var whatuprice;
+                  var pupis =parseFloat(pup.value);
+             var iupis =parseFloat(iup.value);
+             if( pupis !==0 && !isNaN(pupis)){
+              whatuprice = pupis;
+             }else{
+              whatuprice = iupis;
+             }
+              console.log(parseFloat(iup.value))
+            
+                  if (medicineName !=="0" && medicineName !=="" && productcode !=="" &&
+                  quantity !=="" && quantity !== null  &&  quantity !==0 &&
+                  !isNaN(quantity)  && !isNaN(whatuprice) && !isNaN(whatsininv) && whatsininv > quantity
+                   ) {
+                    var total = parseFloat(quantity) * parseFloat(whatuprice)
+                    const rowMaterialAmountObj = {
+                      invId:medicineName,
+                      medicineId:medicineIds,
+                      medicineName:medicine,
+                     
+                      sellPrice:whatuprice,
+                      
+                      productCode:productcode,
+                      quantity:quantity,
+                   
+                      totalamount:total
+                    };
+                    rowMaterialAmountArray.push(rowMaterialAmountObj);
+                    console.log(rowMaterialAmountObj)
+                    // Append the JSON object to the list
+                    //$("#list").append("<li><input type='checkbox'  class='form-check-input' checked >" + rowMaterialName + " " + amount + "<span class='removeItem' data-rowMaterialId='${rowMaterialId}'>Remove</span></li>");
+                  //	const listItem = document.createElement("li");
+                    const tableRow = document.createElement("tr");
+  // listItem.innerHTML = `<input type='checkbox' class='form-check-input' checked > ${productName}${brandName} ${amount} <span class='removeItem badge bg-red' data-rowMaterialId='${productId}'>Remove</span>`;
+  // document.getElementById("list").appendChild(listItem);
+tableRow.innerHTML = `
+<td><span class='removeItem btn btn-danger btn-sm' data-rowMaterialId='${medicineName}'>X</span></td>
+<td> ${medicine} </td>
+
+  <td>${quantity}</td><td>${whatuprice}</td><td class='amount'>${total}</td> 
+  `;
+  document.getElementById("tablerow").appendChild(tableRow);
+
+                    // Update the hidden input field with the array of objects
+                    //document.getElementById("rowmaterialamountobjarray").value = JSON.stringify(rowMaterialAmountArray);
+                    updateRowMaterialAmountArray();
+                    updateTotalAmount();
+
+                    // Clear the input fields
+                    
+                 document.getElementById("sellunitprice").value ="";
+                 document.getElementById("amount").value ="";
+                 document.getElementById("productcode").value ="";
+                 const up = document.getElementById("unitprice");
+              const ai =document.getElementById("amountininventory");
+              const st = document.getElementById("subtotal");
+              up.innerHTML ="";
+                ai.innerHTML ="";
+                st.innerHTML ="";
+                  }
+                });
+                updateTotalAmount();
+document.getElementById("tablerow").addEventListener("click", function (event) {
+if (event.target.classList.contains("removeItem")) {
+const rowMaterialIdToRemove = event.target.getAttribute("data-rowMaterialId");
+
+// Find the parent table row (tr) of the clicked element
+const tableRow = event.target.closest("tr");
+
+// Remove the entire table row
+if (tableRow) {
+  tableRow.remove();
+
+  // Remove the item from the array
+  const indexToRemove = rowMaterialAmountArray.findIndex(item => 
+      item.invId === rowMaterialIdToRemove
+  );
+
+  if (indexToRemove !== -1) {
+      rowMaterialAmountArray.splice(indexToRemove, 1);
+
+      // Update the hidden input field with the updated array of objects
+      updateRowMaterialAmountArray();
+updateTotalAmount();
+  }
+}
+}
+});
+function updateTotalAmount() {
+// Calculate the sum of all rows' total amounts
+const totalAmountElement = document.getElementById("totalAmount");
+let totalAmount = 0;
+
+// Iterate through the rows and sum the amounts
+const tableRows = document.querySelectorAll("#tablerow tr");
+tableRows.forEach(row => {
+const amountCell = row.querySelector(".amount"); // Assuming you have a class "amount" for the amount cells
+if (amountCell) {
+  totalAmount += parseFloat(amountCell.textContent) || 0;
+
+document.getElementById('totalsaleamount').innerHTML ="";
+document.getElementById('totalsaleamount').textContent = totalAmount.toFixed(2) +"Birr";
+document.getElementById('totalamount').value = totalAmount;
+
+}
+});
+
+// Update the total amount cell
+totalAmountElement.textContent = totalAmount.toFixed(2);
+document.getElementById('totalsaleamount').textContent = totalAmount.toFixed(2) +"Birr";
+const totallast = document.getElementById("totallast");
+totallast.style.display = tableRows.length > 0 ? "table-row" : "none";
+}
+// Function to update the hidden input field with the array of objects
+function updateRowMaterialAmountArray() {
+document.getElementById("rowmaterialamountobjarray").value = JSON.stringify(rowMaterialAmountArray);
+}
+              
+              
+              });
+              </script>
+              <script>
+                 const inventorydt = '<%= JSON.stringify(inventory) %>' ;
+             
+              const cleanedInventJSON = inventorydt.replace(/&#34;/g, '"');
+              const inventory = JSON.parse(cleanedInventJSON);
+              console.log(inventory)
+              const pc = document.getElementById('productcode');
+              const drugName = document.getElementById("medicinename");
+              const pcName = document.getElementById("productcode");
+              const subAmount = document.getElementById("amount");
+              const displaysubtotal = document.getElementById("subtotal");
+              
+              const perunitprice = document.getElementById("sellunitprice");
+              const showunitprice = document.getElementById("unitprice");
+              const amountininventory =document.getElementById("amountininventory");
+  
+             
+              drugName.addEventListener("change", function () {
+             
+              const selectedDrug = drugName.value;
+          
+              // Find the matching price in the pricelist
+              const matchingPcode = inventory.find(item => item.invid === selectedDrug );
+            
+              if (matchingPcode) {
+                // Update the price input with the matching price
+                pc.value = matchingPcode.productcode;
+                amountininventory.innerHTML =matchingPcode.quantity;
+                showunitprice.value =matchingPcode.costprice;
+               document.getElementById("subtotal").innerHTML ="";
+               document.getElementById("amount").value="";
+              document.getElementById("sellunitprice").value="";
+         
+              } else {
+                // If no matching price is found, you can handle this case here
+                pc.value = ""; // Set it to an empty value or display an error message
+              }
+            });
+            pcName.addEventListener("change", function () {
+             
+             const selectedPC = pcName.value;
+         
+             // Find the matching price in the pricelist
+             const matchingMId = inventory.find(item => item.productcode === selectedPC );
+           
+             if (matchingMId) {
+               // Update the price input with the matching price
+               drugName.value = matchingMId.invid;
+               amountininventory.innerHTML =matchingMId.quantity;
+               showunitprice.value =matchingMId.costprice;
+               document.getElementById("subtotal").innerHTML ="";
+               document.getElementById("amount").value="";
+              document.getElementById("sellunitprice").value="";
+     
+             } else {
+               // If no matching price is found, you can handle this case here
+               drugName.value = ""; // Set it to an empty value or display an error message
+             }
+           });
+           subAmount.addEventListener("change", function () {
+             var uprice; 
+             var xx =parseFloat(perunitprice.value);
+             var xy =parseFloat(showunitprice.value)
+             if( xx !==0 && !isNaN(xx)){
+              uprice = xx;
+             }else{
+              uprice = xy;
+             }
+              
+             
+             const subtotal = parseFloat(subAmount.value)  * parseFloat(uprice);
+             displaysubtotal.innerHTML =subtotal;
+           });
+              </script>
+             
+        <script>
+          // Get the select element and search input element
+          const select = document.getElementById("medicinename");
+          const searchInput = document.getElementById("searchInput");
+  
+          // Add an event listener to the search input for filtering options
+          searchInput.addEventListener("input", function () {
+              const searchValue = searchInput.value.toLowerCase();
+  
+              for (let i = 0; i < select.options.length; i++) {
+                  const option = select.options[i];
+                  const optionText = option.text.toLowerCase();
+  
+                  if (optionText.includes(searchValue)) {
+                      option.style.display = "block";
+                  } else {
+                      option.style.display = "none";
+                  }
+              }
+          });
+      </script>
+
+        <%- include ('./partials/footer')%>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- base:js -->
+  <script src="../../../../vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <script src="../../../../vendors/chart.js/Chart.min.js"></script>
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="../../../../js/off-canvas.js"></script>
+  <script src="../../../js/hoverable-collapse.js"></script>
+  <script src="../../../js/template.js"></script>
+  <script src="../../../js/settings.js"></script>
+  <script src="../../../js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="../../../../js/dashboard.js"></script>
+  <script src="../../../../vendors/typeahead.js/typeahead.bundle.min.js"></script>
+  <script src="../../../../vendors/select2/select2.min.js"></script>
+  <!-- End plugin js for this page -->
+  <!-- Custom js for this page-->
+  <script src="../../../../js/file-upload.js"></script>
+  <script src="../../../../js/typeahead.js"></script>
+  <script src="../../../../js/select2.js"></script>
+  <!-- End custom js for this page-->
+  <script>
+		$(document).ready(function() {
+			
+            $('#myTable').dataTable( {
+  "columnDefs": [ {
+      "targets": 0,
+      "searchable": false
+    } ]
+} );
+		});
+	</script>
+	<link href="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.css" rel="stylesheet">
+ 
+	<script src="https://cdn.datatables.net/v/dt/dt-1.13.6/datatables.min.js"></script>
+	
+</body>
+
+</html>
+

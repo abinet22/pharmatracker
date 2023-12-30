@@ -1,0 +1,70 @@
+
+<link rel="stylesheet" href="../../vendors/mdi/css/materialdesignicons.min.css">
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/dashboard">
+          <i class="typcn typcn-device-desktop menu-icon"></i>
+          <span class="menu-title">Dashboard</span>
+         
+        </a>
+      </li>
+     
+      <!-- <li class="nav-item">
+        <a class="nav-link" href="/inventory/addnewproduct">
+          <i class="mdi mdi-database-plus menu-icon"></i>
+          <span class="menu-title">Add To Inventory</span>
+          <div class="badge badge-danger">+</div>
+        </a>
+      </li> -->
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#charts76" aria-expanded="false" aria-controls="charts76">
+          <i class="mdi mdi-database-plus menu-icon"></i>
+          <span class="menu-title">Add To Inventory</span>
+          
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="charts76">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="/inventory/addnewproduct">Add Medicine</a></li>
+            <li class="nav-item"> <a class="nav-link" href="/inventory/addotherproducttoinventory">Add Other Product</a></li>
+         
+        </ul>
+        </div>
+      </li>
+ 
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#charts5" aria-expanded="false" aria-controls="charts5">
+          <i class="mdi mdi-database-lock menu-icon"></i>
+          <span class="menu-title">Manage Inventory</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="charts5">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="/inventory/inventorylist">Medicine Inv. List </a></li>
+            <li class="nav-item"> <a class="nav-link" href="/inventory/otherproductinventorylist">Other Product Inv.</a></li>
+           
+            <li class="nav-item"> <a class="nav-link" href="/inventory/inventorylog">Medicine Inv. Log</a></li>
+            <li class="nav-item"> <a class="nav-link" href="/inventory/inventorylogotherproduct">Other Pro Inv. Log</a></li>
+         
+        </ul>
+        </div>
+      </li>
+     
+    
+  
+
+      
+  
+     
+    </ul>
+  </nav>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+      $(document).ready(function() {
+          $('.nav-link[href="#"]').on('click', function(e) {
+              e.preventDefault();
+              // Your additional logic
+          });
+      });
+  </script>
