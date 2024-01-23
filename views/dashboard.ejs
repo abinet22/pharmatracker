@@ -215,24 +215,30 @@
                <div class="card-body">
                 <h5 class="card-title">Sales And Inventory </h5>
                 <p class="card-description">
-                 <code>Notifications</code>
+                 <code>Notifications  / Low Stock Alert!  <br></code>
                 </p>
                 <div class="col-lg-12 grid-margin ">
                 
                   <div class="">
-                   <div >
+                    <div class="table-wrapper-scroll-y my-custom-scrollbar" style="max-height: 300px; overflow-y: auto;">
+                    <table class="table table-bordered table-striped mb-0">
+                  
                     <% if(inventnotification.length >0){%>
                       <% inventnotification.forEach(function (row){%>
-                   
-                      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      Low Stock Alert!  <br>
-       <%= row.location_name %>  Medicine Name <%= row.medicinename %>/<%= row.genericname %>/<%= row.medicinecategoryname %> Quantity <%= row.quantity %>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
+                  <tr>
+                     
+                   <td>
+                    <small>
+                    
+                    In Store  <%= row.location_name %>  :[<%= row.genericname %>] with brand name <%= row.medicinename %> has low Quantity. [<code><%= row.quantity %></code>] 
+                
+                    </small>
+                   </td>
+                  </tr>
                      <% }) %>
                      <%}%>
+                       
+                    </table>
                    </div>                 
                    </div>
                 </div>
@@ -240,6 +246,42 @@
                </div>
            
               </div>
+              <div class="card">
+             
+                <div class="card-body">
+                 <h5 class="card-title">Near Expiry Date Medicine List </h5>
+                 <p class="card-description">
+                  <code>Notifications  / Near Expiry Alert!  <br></code>
+                 </p>
+                 <div class="col-lg-12 grid-margin ">
+                 
+                   <div class="">
+                     <div class="table-wrapper-scroll-y my-custom-scrollbar" style="max-height: 300px; overflow-y: auto;">
+                     <table class="table table-bordered table-striped mb-0">
+                   
+                     <% if(expriypro.length >0){%>
+                       <% expriypro.forEach(function (row){%>
+                   <tr>
+                      
+                    <td>
+                     <small>
+                     
+                     In Store  <%= row.location_name %>  :[<%= row.genericname %>] with brand name <%= row.medicinename %> has  Quantity. [<code><%= row.quantity %></code>]. Expiry Date <code><%= row.days_until_expiration  %> days left</code> 
+                 
+                     </small>
+                    </td>
+                   </tr>
+                      <% }) %>
+                      <%}%>
+                        
+                     </table>
+                    </div>                 
+                    </div>
+                 </div>
+               
+                </div>
+            
+               </div>
             </div>
             <% }%>
                 
@@ -251,23 +293,28 @@
                  <div class="card-body">
                   <h5 class="card-title">Sales And Inventory </h5>
                   <p class="card-description">
-                   <code>Notifications</code>
+                   <code>Notifications /    Low Stock Alert!  <br></code>
                   </p>
                   <div class="col-lg-12 grid-margin ">
                     <div class="">
-                     <div >
+                      <div class="table-wrapper-scroll-y my-custom-scrollbar" style="max-height: 300px; overflow-y: auto;">
+                        <table class="table table-bordered table-striped mb-0">
+                      
                       <% if(inventnotificationshop.length >0){%>
                         <% inventnotificationshop.forEach(function (row){%>
-                     
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        Low Stock Alert!  <br>
-         <%= row.location_name %>  Medicine Name <%= row.medicinename %>/<%= row.genericname %>/<%= row.medicinecategoryname %> Quantity <%= row.quantity %>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+                     <tr>
+                      <td>
+                        <small>
+                        
+                        In Store  <%= row.location_name %>  :[<%= row.genericname %>] with brand name <%= row.medicinename %> has low Quantity. [<code><%= row.quantity %></code>] 
+                    
+                        </small>
+                       </td>
+                     </tr>
+                      
                        <% }) %>
                        <%}%>
+                      </table>
                      </div>                 
                      </div>
                   </div>

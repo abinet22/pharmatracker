@@ -55,7 +55,7 @@
           
            
          
-                <div class="col-md-4 grid-margin stretch-card">
+                <div class="col-md-3 grid-margin stretch-card">
                   <div class="card">
                     <div class="card-body">
                       <h4 class="card-title">Total Sale <br>Today(By Shop)</h4>
@@ -76,7 +76,28 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-4 grid-margin stretch-card">
+                <div class="col-md-3 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Total Sale <br>Today(By Cashier)</h4>
+                      <div class="media">
+                         <i class="mdi mdi-shopping icon-md text-info d-flex align-self-start mr-3"></i>
+                        <div class="media-body">
+                          <ul class="list-ticked">
+                           
+                            <% if(todaysalesbycashier.length >0){%>
+                              <% todaysalesbycashier.forEach(function (row){%>
+                            <li>  <%= row.cashiername %>  &gt;<span><%= row.quantity %></span></li>
+                             <% }) %>
+                             <%}%>
+                             
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3 grid-margin stretch-card">
                   <div class="card">
                     <div class="card-body">
                       <h4 class="card-title">Top 5 Sold Medicine Sale Today(Quantity)</h4>
@@ -97,7 +118,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-4 grid-margin stretch-card">
+                <div class="col-md-3 grid-margin stretch-card">
                   <div class="card">
                     <div class="card-body">
                       <h4 class="card-title">Top 5 Sold Medicine Sale Today(By Amount)</h4>
@@ -131,7 +152,7 @@
                       <th>Shop Name</th>
                     <th>Sold  By</th>
                     <th>Drug Info</th>
-                    <th>Unit Price X Quantity = Total</th>
+                    <th> Quantity X Unit Price = Total</th>
                
                     <th>Sale Day</th>
                     </thead><tbody>

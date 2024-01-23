@@ -158,6 +158,23 @@ salesDataByDate.push({
     WHERE quantity <= 5
     GROUP BY medicinename,medicinecategoryname,genericname,location_name,medicineid,warehouseid
   `);
+ const [expriypro,exmeta] = await db.sequelize.query(`
+ SELECT 
+ medicinename,
+ medicinecategoryname,
+ genericname,
+ COALESCE(Shops.shopname, Warehouses.inventoryname) AS location_name,
+ quantity,
+ DATEDIFF(expirydate, CURDATE()) AS days_until_expiration
+FROM Inventories
+INNER JOIN MedicineInfos ON medid = medicineid
+INNER JOIN MedicineCategories ON MedicineInfos.medicinecategory = categoryid
+INNER JOIN MedicineGenericNames ON MedicineInfos.medicinegenericname = drugid
+LEFT JOIN Shops ON Shops.shopid = Inventories.warehouseid
+LEFT JOIN Warehouses ON Warehouses.invid = Inventories.warehouseid
+WHERE expirydate BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 4 MONTH) and quantity> 0
+order by days_until_expiration asc
+ `)
 
   const [inventnotificationshop, inventnots] = await db.sequelize.query(`
     SELECT 
@@ -185,6 +202,7 @@ salesDataByDate.push({
     alltimesalesbyvalue:alltimesalesbyvalue,
     alltimesalesbyquantity:alltimesalesbyquantity,
     salesDataByDate: salesDataByDate,
+    expriypro:expriypro
   });
 });
 // router.get('/dashboard', ensureAuthenticated, async function(req, res) {

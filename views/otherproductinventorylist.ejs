@@ -160,6 +160,7 @@
            
             <th>Quantity</th>
             <th>Update New Quantity</th>
+            <th>Update New Price</th>
           </thead>
           <tbody id="modalTableBody"></tbody>
         </table>
@@ -263,6 +264,21 @@ var matchingDetails = inventoryData2.filter(function(item) {
                   </div>
                   <div class="col-md-5">
                     <button type="submit" class="btn btn-block btn-sm btn-danger" >Update</button>
+                  </div>
+                </div>
+            
+            
+              </form>
+            </td>
+            <td >
+            <form action="/admin/updateinventorypriceother" method="post">
+              <div class="row">
+                <div class="col-md-7">
+                  <input name="newprice" type="number" placeholder="New Price" class="form-control form-control-sm">
+              <input type="hidden" name="invid" value="${detail.invid}">
+                  </div>
+                  <div class="col-md-5">
+                    <button type="submit" class="btn btn-block btn-sm btn-primary" >Update</button>
                   </div>
                 </div>
             

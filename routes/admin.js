@@ -394,7 +394,7 @@ router.get('/inventorylist',ensureAuthenticated,async (req,res) =>{
   group by medicinename,medicinecategoryname,genericname,location_name,medicineid,warehouseid
     `);
   const [inventory,mlm] = await db.sequelize.query(`
-  SELECT Inventories.invid,warehouseid,
+  SELECT Inventories.invid,warehouseid,sellprice,
   manufuctureddate,expirydate,productcode,batchno,quantity,medicineid,medicinename,medicinecategoryname,genericname,suppliertype,
   COALESCE(Shops.shopname, Warehouses.inventoryname) AS location_name
   FROM Inventories
@@ -684,6 +684,13 @@ router.get('/todaysalesdata',ensureAuthenticated,async (req,res) =>{
   where  SalesData.createdAt between '${formattedDatestart}' and '${formattedDateend}' group by Shops.shopname
 
   `);
+  const [todaysalesbycashier,dmcs] =await db.sequelize.query(`
+  select Users.staffid,fullname as cashiername,sum(SalesData.totalpayable) as quantity  from  SalesData
+  
+  inner join Users on SalesData.soldby = Users.staffid
+  where  SalesData.createdAt between '${formattedDatestart}' and '${formattedDateend}' group by Users.staffid,cashiername
+
+  `);
   const [todaysalesbyquantity,dmq] =await db.sequelize.query(`
   select medicinename,sum(SalesData.quantity) as quantity  from  SalesData
   
@@ -700,6 +707,7 @@ router.get('/todaysalesdata',ensureAuthenticated,async (req,res) =>{
   `);
    res.render('admintodaysalestransaction',{
     todaysalesbyvalue:todaysalesbyvalue,
+    todaysalesbycashier:todaysalesbycashier,
     todaysalesbyquantity:todaysalesbyquantity,
     todaysalesbyshop:todaysalesbyshop,
      user:req.user,salelist:salelist})
@@ -1562,7 +1570,7 @@ where MedicineInfos.producttag !='Other'
 group by medicinename,medicinecategoryname,genericname,location_name,medicineid,warehouseid
   `);
 const [inventory,mlm] = await db.sequelize.query(`
-SELECT Inventories.invid,warehouseid,
+SELECT Inventories.invid,warehouseid,sellprice,
 manufuctureddate,expirydate,productcode,batchno,quantity,medicineid,medicinename,medicinecategoryname,genericname,suppliertype,
 COALESCE(Shops.shopname, Warehouses.inventoryname) AS location_name
 FROM Inventories
@@ -1582,7 +1590,7 @@ const endIndex = startIndex + itemsPerPage;
 const inventorytotcurrent = inventorytot.slice(startIndex, endIndex);
 const isinvthere = await db.Inventory.findOne({where:{invid:invid}});
 
-if(isinvthere){
+if(isinvthere && newqty){
 const udtqty = await db.Inventory.update({quantity:parseFloat(newqty)},{where:{invid:invid}});
 if(udtqty){
   const [inventorytot,m2lm] = await db.sequelize.query(`
@@ -1599,7 +1607,7 @@ where MedicineInfos.producttag !='Other'
 group by medicinename,medicinecategoryname,genericname,location_name,medicineid,warehouseid
   `);
 const [inventory,mlm] = await db.sequelize.query(`
-SELECT Inventories.invid,warehouseid,
+SELECT Inventories.invid,warehouseid,sellprice,
 manufuctureddate,expirydate,productcode,batchno,quantity,medicineid,medicinename,medicinecategoryname,genericname,suppliertype,
 COALESCE(Shops.shopname, Warehouses.inventoryname) AS location_name
 FROM Inventories
@@ -1634,6 +1642,96 @@ where  MedicineInfos.producttag !='Other'
 }
 
 });
+router.post('/updateinventoryprice',ensureAuthenticated,async (req,res) =>{
+  const {newprice,invid} = req.body;
+  const warelist = await db.Warehouse.findAll({});
+  const shoplist = await db.Shop.findAll({});
+  const [inventorytot,m2lm] = await db.sequelize.query(`
+  SELECT 
+  medicinename,medicinecategoryname,genericname,medid as medicineid,warehouseid,
+  COALESCE(Shops.shopname, Warehouses.inventoryname) AS location_name,sum(quantity) as totalamount
+FROM Inventories
+INNER JOIN MedicineInfos ON medid = medicineid
+INNER JOIN MedicineCategories ON MedicineInfos.medicinecategory = categoryid
+INNER JOIN MedicineGenericNames ON MedicineInfos.medicinegenericname = drugid
+LEFT JOIN Shops ON Shops.shopid = Inventories.warehouseid
+LEFT JOIN Warehouses ON Warehouses.invid = Inventories.warehouseid
+where MedicineInfos.producttag !='Other'
+group by medicinename,medicinecategoryname,genericname,location_name,medicineid,warehouseid
+  `);
+const [inventory,mlm] = await db.sequelize.query(`
+SELECT Inventories.invid,warehouseid,sellprice,
+manufuctureddate,expirydate,productcode,batchno,quantity,medicineid,medicinename,medicinecategoryname,genericname,suppliertype,
+COALESCE(Shops.shopname, Warehouses.inventoryname) AS location_name
+FROM Inventories
+INNER JOIN MedicineInfos ON medid = medicineid
+INNER JOIN MedicineCategories ON MedicineInfos.medicinecategory = categoryid
+INNER JOIN MedicineGenericNames ON MedicineInfos.medicinegenericname = drugid
+LEFT JOIN Shops ON Shops.shopid = Inventories.warehouseid
+LEFT JOIN Warehouses ON Warehouses.invid = Inventories.warehouseid
+where  MedicineInfos.producttag !='Other'
+`);
+const itemsPerPage = 20; // Number of items per page
+const currentPage = req.query.page ? parseInt(req.query.page) : 0;
+
+// Calculate the slice of joblist to display for the current page
+const startIndex = currentPage * itemsPerPage;
+const endIndex = startIndex + itemsPerPage;
+const inventorytotcurrent = inventorytot.slice(startIndex, endIndex);
+const isinvthere = await db.Inventory.findOne({where:{invid:invid}});
+
+if(isinvthere && newprice){
+const udtqty = await db.Inventory.update({sellprice:parseFloat(newprice)},{where:{invid:invid}});
+if(udtqty){
+  const [inventorytot,m2lm] = await db.sequelize.query(`
+  SELECT 
+  medicinename,medicinecategoryname,genericname,medid as medicineid,warehouseid,
+  COALESCE(Shops.shopname, Warehouses.inventoryname) AS location_name,sum(quantity) as totalamount
+FROM Inventories
+INNER JOIN MedicineInfos ON medid = medicineid
+INNER JOIN MedicineCategories ON MedicineInfos.medicinecategory = categoryid
+INNER JOIN MedicineGenericNames ON MedicineInfos.medicinegenericname = drugid
+LEFT JOIN Shops ON Shops.shopid = Inventories.warehouseid
+LEFT JOIN Warehouses ON Warehouses.invid = Inventories.warehouseid
+where MedicineInfos.producttag !='Other'
+group by medicinename,medicinecategoryname,genericname,location_name,medicineid,warehouseid
+  `);
+const [inventory,mlm] = await db.sequelize.query(`
+SELECT Inventories.invid,warehouseid,sellprice,
+manufuctureddate,expirydate,productcode,batchno,quantity,medicineid,medicinename,medicinecategoryname,genericname,suppliertype,
+COALESCE(Shops.shopname, Warehouses.inventoryname) AS location_name
+FROM Inventories
+INNER JOIN MedicineInfos ON medid = medicineid
+INNER JOIN MedicineCategories ON MedicineInfos.medicinecategory = categoryid
+INNER JOIN MedicineGenericNames ON MedicineInfos.medicinegenericname = drugid
+LEFT JOIN Shops ON Shops.shopid = Inventories.warehouseid
+LEFT JOIN Warehouses ON Warehouses.invid = Inventories.warehouseid
+where  MedicineInfos.producttag !='Other'
+`);
+  res.render('admincurrentinventorylist',{shoplist:shoplist,inventory:inventory,warelist:warelist,
+    inventorytot:inventorytot,
+    success_msg:'Inventory Price Updated Successfully',
+    currentPage: currentPage,
+    totalPages: Math.ceil(inventorytot.length / itemsPerPage),
+    user:req.user,})
+}else{
+  res.render('admincurrentinventorylist',{shoplist:shoplist,inventory:inventory,warelist:warelist,
+    inventorytot:inventorytot,
+    error_msg:'Inventory Cant Update New Price Try Again',
+    currentPage: currentPage,
+    totalPages: Math.ceil(inventorytot.length / itemsPerPage),
+    user:req.user,})
+}
+}else{
+  res.render('admincurrentinventorylist',{shoplist:shoplist,inventory:inventory,warelist:warelist,
+    inventorytot:inventorytot,
+    error_msg:'Inventory Not Find',
+    currentPage: currentPage,
+    totalPages: Math.ceil(inventorytot.length / itemsPerPage),
+    user:req.user,})
+}
+
+});
 router.post('/updateinventoryqtyother',ensureAuthenticated,async (req,res) =>{
   const {newqty,invid} = req.body;
   const warelist = await db.Warehouse.findAll({});
@@ -1652,7 +1750,7 @@ where MedicineInfos.producttag ='Other'
 group by medicinename,medicinecategoryname,genericname,location_name,medicineid,warehouseid
   `);
 const [inventory,mlm] = await db.sequelize.query(`
-SELECT Inventories.invid,warehouseid,
+SELECT Inventories.invid,warehouseid,sellprice,
 manufuctureddate,expirydate,productcode,batchno,quantity,medicineid,medicinename,medicinecategoryname,genericname,suppliertype,
 COALESCE(Shops.shopname, Warehouses.inventoryname) AS location_name
 FROM Inventories
@@ -1672,7 +1770,7 @@ const endIndex = startIndex + itemsPerPage;
 const inventorytotcurrent = inventorytot.slice(startIndex, endIndex);
 const isinvthere = await db.Inventory.findOne({where:{invid:invid}});
 
-if(isinvthere){
+if(isinvthere && newqty){
 const udtqty = await db.Inventory.update({quantity:parseFloat(newqty)},{where:{invid:invid}});
 if(udtqty){
   const [inventorytot,m2lm] = await db.sequelize.query(`
@@ -1710,6 +1808,96 @@ where  MedicineInfos.producttag ='Other'
   res.render('otherproductinventorylist',{shoplist:shoplist,inventory:inventory,warelist:warelist,
     inventorytot:inventorytot,
     error_msg:'Inventory Cant Update New Quantity Try Again',
+    currentPage: currentPage,
+    totalPages: Math.ceil(inventorytot.length / itemsPerPage),
+    user:req.user,})
+}
+}else{
+  res.render('otherproductinventorylist',{shoplist:shoplist,inventory:inventory,warelist:warelist,
+    inventorytot:inventorytot,
+    error_msg:'Inventory Not Find',
+    currentPage: currentPage,
+    totalPages: Math.ceil(inventorytot.length / itemsPerPage),
+    user:req.user,})
+}
+
+});
+router.post('/updateinventorypriceother',ensureAuthenticated,async (req,res) =>{
+  const {newprice,invid} = req.body;
+  const warelist = await db.Warehouse.findAll({});
+  const shoplist = await db.Shop.findAll({});
+  const [inventorytot,m2lm] = await db.sequelize.query(`
+  SELECT 
+  medicinename,medicinecategoryname,genericname,medid as medicineid,warehouseid,
+  COALESCE(Shops.shopname, Warehouses.inventoryname) AS location_name,sum(quantity) as totalamount
+FROM Inventories
+INNER JOIN MedicineInfos ON medid = medicineid
+INNER JOIN MedicineCategories ON MedicineInfos.medicinecategory = categoryid
+INNER JOIN MedicineGenericNames ON MedicineInfos.medicinegenericname = drugid
+LEFT JOIN Shops ON Shops.shopid = Inventories.warehouseid
+LEFT JOIN Warehouses ON Warehouses.invid = Inventories.warehouseid
+where MedicineInfos.producttag ='Other'
+group by medicinename,medicinecategoryname,genericname,location_name,medicineid,warehouseid
+  `);
+const [inventory,mlm] = await db.sequelize.query(`
+SELECT Inventories.invid,warehouseid,sellprice,
+manufuctureddate,expirydate,productcode,batchno,quantity,medicineid,medicinename,medicinecategoryname,genericname,suppliertype,
+COALESCE(Shops.shopname, Warehouses.inventoryname) AS location_name
+FROM Inventories
+INNER JOIN MedicineInfos ON medid = medicineid
+INNER JOIN MedicineCategories ON MedicineInfos.medicinecategory = categoryid
+INNER JOIN MedicineGenericNames ON MedicineInfos.medicinegenericname = drugid
+LEFT JOIN Shops ON Shops.shopid = Inventories.warehouseid
+LEFT JOIN Warehouses ON Warehouses.invid = Inventories.warehouseid
+where  MedicineInfos.producttag ='Other'
+`);
+const itemsPerPage = 20; // Number of items per page
+const currentPage = req.query.page ? parseInt(req.query.page) : 0;
+
+// Calculate the slice of joblist to display for the current page
+const startIndex = currentPage * itemsPerPage;
+const endIndex = startIndex + itemsPerPage;
+const inventorytotcurrent = inventorytot.slice(startIndex, endIndex);
+const isinvthere = await db.Inventory.findOne({where:{invid:invid}});
+
+if(isinvthere && newprice){
+const udtqty = await db.Inventory.update({sellprice:parseFloat(newprice)},{where:{invid:invid}});
+if(udtqty){
+  const [inventorytot,m2lm] = await db.sequelize.query(`
+  SELECT 
+  medicinename,medicinecategoryname,genericname,medid as medicineid,warehouseid,
+  COALESCE(Shops.shopname, Warehouses.inventoryname) AS location_name,sum(quantity) as totalamount
+FROM Inventories
+INNER JOIN MedicineInfos ON medid = medicineid
+INNER JOIN MedicineCategories ON MedicineInfos.medicinecategory = categoryid
+INNER JOIN MedicineGenericNames ON MedicineInfos.medicinegenericname = drugid
+LEFT JOIN Shops ON Shops.shopid = Inventories.warehouseid
+LEFT JOIN Warehouses ON Warehouses.invid = Inventories.warehouseid
+where MedicineInfos.producttag ='Other'
+group by medicinename,medicinecategoryname,genericname,location_name,medicineid,warehouseid
+  `);
+const [inventory,mlm] = await db.sequelize.query(`
+SELECT Inventories.invid,warehouseid,sellprice,
+manufuctureddate,expirydate,productcode,batchno,quantity,medicineid,medicinename,medicinecategoryname,genericname,suppliertype,
+COALESCE(Shops.shopname, Warehouses.inventoryname) AS location_name
+FROM Inventories
+INNER JOIN MedicineInfos ON medid = medicineid
+INNER JOIN MedicineCategories ON MedicineInfos.medicinecategory = categoryid
+INNER JOIN MedicineGenericNames ON MedicineInfos.medicinegenericname = drugid
+LEFT JOIN Shops ON Shops.shopid = Inventories.warehouseid
+LEFT JOIN Warehouses ON Warehouses.invid = Inventories.warehouseid
+where  MedicineInfos.producttag ='Other'
+`);
+  res.render('otherproductinventorylist',{shoplist:shoplist,inventory:inventory,warelist:warelist,
+    inventorytot:inventorytot,
+    success_msg:'Inventory Price Updated Successfully',
+    currentPage: currentPage,
+    totalPages: Math.ceil(inventorytot.length / itemsPerPage),
+    user:req.user,})
+}else{
+  res.render('otherproductinventorylist',{shoplist:shoplist,inventory:inventory,warelist:warelist,
+    inventorytot:inventorytot,
+    error_msg:'Inventory Cant Update New Price Try Again',
     currentPage: currentPage,
     totalPages: Math.ceil(inventorytot.length / itemsPerPage),
     user:req.user,})

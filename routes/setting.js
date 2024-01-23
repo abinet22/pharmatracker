@@ -360,7 +360,7 @@ LEFT JOIN Warehouses ON Warehouses.invid = Users.shopwareid
 })
 router.post('/updateuserinfo', ensureAuthenticated, async function (req, res) {
   const { staffid, password, username, fullname, phonenumber, userroll, wareid, shopid } = req.body;
-
+  console.log(req.body);
   const [userlist,ulm]  = await db.sequelize.query(`
   SELECT 
   Users.*,
@@ -374,22 +374,25 @@ LEFT JOIN Warehouses ON Warehouses.invid = Users.shopwareid
     const inventorylist  = await db.Warehouse.findAll({});
     const shoplist  = await db.Shop.findAll({});
   // Define the fields you want to update
-  const updatedFields = {};
+  var updatedFields = {};
 
   // If the password is provided, hash it
   if (password) {
-    bcrypt.hash(password, 10, (err, hash) => {
-      if (!err) {
-        updatedFields.password = hash;
-      }
-    });
+    try {
+      const hash = await bcrypt.hash(password, 10);
+      updatedFields.password = hash;
+    } catch (err) {
+      console.error('Error hashing password:', err);
+      // Handle the error as needed
+    }
   }
-
+   console.log(password);
+   console.log(updatedFields.password);
   // Populate the updated fields
   if (username) updatedFields.username = username;
   if (fullname) updatedFields.fullname = fullname;
-  if (phonenumber) updatedFields.phone_number = phonenumber;
-  if (userroll !=="0" && userroll) updatedFields.user_roll = userroll;
+  if (phonenumber) updatedFields.phonenumber = phonenumber;
+
   if (wareid) updatedFields.wareid = wareid;
   if (shopid) updatedFields.wareid = shopid;
 
@@ -402,7 +405,7 @@ LEFT JOIN Warehouses ON Warehouses.invid = Users.shopwareid
 
   // Update the user in the database
   try {
-   
+    console.log("updatedFields:",updatedFields);
     const updatedUser = await db.User.update(updatedFields, {
       where: { staffid: staffid },
     });

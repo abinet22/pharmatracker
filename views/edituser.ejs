@@ -111,40 +111,12 @@
                             <div class="row">
                               <div class="col-md-6">
                                 <div class="form-group">
-                                  <label for="exampleInputCity1">User Roll(<%= editeduser.user_roll %>)</label>
-                                  <select class="form-control" name="userroll"  onchange="changeshopware(this);">
-                                    <option value="0">Select User Roll</option>
-                                    <option value="Sales_Manager">Sales Manager</option>
-                                    <option value="Inventory_Manager">Inventory Manager</option>
-                                  </select>
+                                  <label for="exampleInputCity1">User Roll(<%= editeduser.user_roll %>)</label><br>
+                                  <label for="exampleInputCity1">Shop/Warehouse Name(<%= editeduser.location_name %>)</label>
+                                 
                                 </div>
                               </div>
-                              <div class="col-md-6" id="shop" style="display: none;">
-                                <div class="form-group" >
-                                  <label for="exampleInputCity1">Shop List</label>
-                                  <select class="form-control" name="shopid">
-                                    <option value="0">Select Shop</option>
-                                   <% if(shoplist.length >0){ %>
-                                      <% shoplist.forEach(function (row){%>
-                                        <option value="<%= row.shopid %>"><%= row.shopname %></option>
-                                      <%})%>
-                                   <%}else{} %>
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="col-md-6" id="inventory" style="display: none;">
-                                <div class="form-group">
-                                  <label for="exampleInputCity1">Inventory Address</label>
-                                  <select class="form-control" name="wareid">
-                                    <option value="0">Select Inventory</option>
-                                    <% if(inventorylist.length >0){ %>
-                                      <% inventorylist.forEach(function (row){%>
-                                        <option value="<%= row.invid %>"><%= row.inventoryname %></option>
-                                      <%})%>
-                                   <%}else{} %>
-                                  </select>
-                                </div>
-                              </div>
+                            
                             </div>
                           
                            <script>
